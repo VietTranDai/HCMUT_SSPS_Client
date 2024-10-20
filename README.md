@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/phuongngo0320/hcmut-ssps">
+  <a href="https://github.com/VietTranDai/HCMUT_SSPS_Client.git">
   <img src="https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png" alt="NestJS Logo" width="140" height="140">
     <img src="hcmut.png" alt="HCMUT Logo" width="160" height="160">
     
