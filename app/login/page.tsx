@@ -69,41 +69,11 @@ function LoginPage() {
     };
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh'
-            }}
-        >
-            <Card
-                style={{
-                    textAlign: 'center',
-                    justifyContent: 'center',
-                    padding: '100px',
-                    width: '600px'
-                }}
-            >
-                <img src="/images/login/01_logobachkhoatoi.png" alt="Logo" style={{ marginBottom: 20, width: '300px', height: 'auto' }} />
-                <Title level={3}>Đăng nhập dành cho</Title>
-                <Space direction="vertical" size="large">
-                    <Button
-                        type="primary"
-                        size="large"
-                        block
-                        onClick={() => onLoginClick(Role.CUSTOMER)} // Update role and login
-                    >
-                        Cán bộ/Sinh viên trường ĐH Bách Khoa TPHCM
-                    </Button>
-                    <Button block size="large" onClick={() => onLoginClick(Role.SPSO)}>
-                        Văn phòng quản lý SPSO
-                    </Button>
-                    <Button block size="large" onClick={() => onLoginClick(Role.ADMIN)}>
-                        Quản trị hệ thống Admin
-                    </Button>
-                </Space>
-            </Card>
+        <div>
+            {/* Todo: Make login page */}
+            <Button onClick={() => onLoginClick(Role.CUSTOMER)}>Customer</Button>
+            <Button onClick={() => onLoginClick(Role.ADMIN)}>Admin</Button>
+            <Button onClick={() => onLoginClick(Role.SPSO)}>Spso</Button>
         </div>
     );
 }
