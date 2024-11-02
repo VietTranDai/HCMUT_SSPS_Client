@@ -1,7 +1,5 @@
 'use client';
 
-const AuthenticatePage = () => {
-    return <div>Hello Authenticate Page</div>;
-};
-
-export default AuthenticatePage;
+export default function Home() {
+    return <div>Hello authentication page</div>;
+}
