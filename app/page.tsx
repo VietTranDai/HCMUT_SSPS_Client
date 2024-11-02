@@ -14,7 +14,7 @@ export default function MyComponent() {
 
         // Nếu Auth_key không tồn tại, có thể điều hướng về trang đăng nhập hoặc xử lý lỗi
         if (!authKey) {
-            router.push('/login');
+            router.push('/pre-login');
             return;
         }
 
@@ -38,7 +38,7 @@ export default function MyComponent() {
         } catch (error) {
             console.error('Lỗi parse JSON: ', error);
             // Điều hướng về login nếu lỗi parse xảy ra
-            router.push('/login');
+            router.push('/pre-login');
         }
     }, []); // Chỉ chạy một lần khi component mount
 
