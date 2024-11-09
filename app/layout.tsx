@@ -5,6 +5,9 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS cho Toastify
 import DefaultLayout from './default-layout/DefaultLayout';
+import Sidebar from './default-layout/Sidebar';
+import Header from './default-layout/Header';
+import Footer from './default-layout/Footer';
 
 // Tải font tùy chỉnh
 const geistSans = localFont({
@@ -37,8 +40,17 @@ export default function RootLayout({
                 {/* ToastContainer để hiển thị các thông báo Toastify */}
                 <ToastContainer />
                 {/* Ant Design Registry để render các component Ant Design */}
-                <DefaultLayout />
-                <AntdRegistry>{children}</AntdRegistry>
+                <AntdRegistry>
+                    <div style={{ display: 'flex', minHeight: '100vh', background: '#F9F9F9' }}>
+                        {/* <DefaultLayout></DefaultLayout> */}
+                        <Sidebar />
+                        <div style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+                            <Header />
+                            {children}
+                            <Footer />
+                        </div>
+                    </div>
+                </AntdRegistry>
             </body>
         </html>
     );
