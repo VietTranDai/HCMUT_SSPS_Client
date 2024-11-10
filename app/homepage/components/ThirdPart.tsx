@@ -29,12 +29,12 @@ const ThirdPart = () => {
     ];
     return (
         <div className="third-part">
-            <h1>Các bên liên quan chính</h1>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '3rem', border: '1px solid green', width: '900px' }}>
+            <div style={{ marginBottom: '30px', fontSize: '20px', fontWeight: '800' }}>Các bên liên quan chính</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '6rem', width: '900px' }}>
                 {contents.map((content, index) => (
                     <div key={index} className="card">
-                        <img src={content.image.src} style={{ height: '60px', width: '60px', marginTop: '20px' }}></img>
-                        <div style={{ fontWeight: '900', fontSize: '17px' }}>{content.title}</div>
+                        <img src={content.image.src} style={{ height: '80px', width: '80px', marginTop: '20px' }}></img>
+                        <div style={{ fontWeight: '900', fontSize: '17px', marginTop: '20px' }}>{content.title}</div>
                     </div>
                 ))}
             </div>

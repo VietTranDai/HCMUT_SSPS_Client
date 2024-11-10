@@ -10,3 +10,21 @@
 .sidebar-content-extra {
     background-color: #ffffff;
 }
+
+.login-button:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.small-menu-content {
+    font-size: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-top: 20px;
+    padding-left: 20px;
+}
+.small-menu-content:hover {
+    background-color: #eaeaea;
+    color: #4663b7;
+    cursor: pointer;
+}

@@ -20,7 +20,7 @@ const SecondPart = () => {
                 <br />
                 tiện lợi và đáng tin cậy trong khuôn viên trường.{' '}
             </p>
-            <div style={{ display: 'flex', border: '1px solid red', justifyContent: 'space-between', minWidth: '100%' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', minWidth: '100%' }}>
                 {second_part_content.map((content, index) => (
                     <div className="second-part-content" key={index}>
                         {content.title}

@@ -4,10 +4,10 @@ import './globals.css'; // Đảm bảo rằng bạn đã định nghĩa đúng 
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS cho Toastify
-import DefaultLayout from './default-layout/DefaultLayout';
 import Sidebar from './default-layout/Sidebar';
 import Header from './default-layout/Header';
 import Footer from './default-layout/Footer';
+import IndexContextProvider from './context/IndexContext';
 
 // Tải font tùy chỉnh
 const geistSans = localFont({
@@ -41,15 +41,17 @@ export default function RootLayout({
                 <ToastContainer />
                 {/* Ant Design Registry để render các component Ant Design */}
                 <AntdRegistry>
-                    <div style={{ display: 'flex', minHeight: '100vh', background: '#F9F9F9' }}>
-                        {/* <DefaultLayout></DefaultLayout> */}
-                        <Sidebar />
-                        <div style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-                            <Header />
-                            {children}
-                            <Footer />
+                    <IndexContextProvider>
+                        <div style={{ display: 'flex', minHeight: '100vh', background: '#F9F9F9' }}>
+                            {/* <DefaultLayout></DefaultLayout> */}
+                            <Sidebar />
+                            <div style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+                                <Header />
+                                {children}
+                                <Footer />
+                            </div>
                         </div>
-                    </div>
+                    </IndexContextProvider>
                 </AntdRegistry>
             </body>
         </html>
