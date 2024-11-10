@@ -1,15 +1,6 @@
-import Header from './Header';
-import Footer from './Footer';
-import Sidebar from './Sidebar';
-
+'use client';
 const DefaultLayout = () => {
-    return (
-        <div>
-            <Header />
-            <Sidebar></Sidebar>
-            <Footer />
-        </div>
-    );
+    return <div></div>;
 };
 
 export default DefaultLayout;

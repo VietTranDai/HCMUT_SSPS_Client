@@ -8,6 +8,7 @@ import Sidebar from './default-layout/Sidebar';
 import Header from './default-layout/Header';
 import Footer from './default-layout/Footer';
 import IndexContextProvider from './context/IndexContext';
+import AuthContextProvider from './context/AuthContext';
 
 // Tải font tùy chỉnh
 const geistSans = localFont({
@@ -41,17 +42,19 @@ export default function RootLayout({
                 <ToastContainer />
                 {/* Ant Design Registry để render các component Ant Design */}
                 <AntdRegistry>
-                    <IndexContextProvider>
-                        <div style={{ display: 'flex', minHeight: '100vh', background: '#F9F9F9' }}>
-                            {/* <DefaultLayout></DefaultLayout> */}
-                            <Sidebar />
-                            <div style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-                                <Header />
-                                {children}
-                                <Footer />
+                    <AuthContextProvider>
+                        <IndexContextProvider>
+                            <div style={{ display: 'flex', minHeight: '100vh', background: '#F9F9F9' }}>
+                                {/* <DefaultLayout></DefaultLayout> */}
+                                <Sidebar />
+                                <div style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+                                    <Header />
+                                    {children}
+                                    <Footer />
+                                </div>
                             </div>
-                        </div>
-                    </IndexContextProvider>
+                        </IndexContextProvider>
+                    </AuthContextProvider>
                 </AntdRegistry>
             </body>
         </html>

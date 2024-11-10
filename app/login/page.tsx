@@ -9,12 +9,14 @@ import { Role } from '@/types/role';
 import { useState } from 'react';
 import { removeCookie } from '@/lib/helpers/cookieStorage';
 import Cookies from 'js-cookie'; // Sử dụng thư viện js-cookie để lấy cookies
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const { Title } = Typography;
 
 function LoginPage() {
     const [role, setRole] = useState<Role>(Role.CUSTOMER); // State for role
     const router = useRouter();
+    const { auth, dispatch } = useAuthContext();
 
     const handleLogin = useGoogleLogin({
         flow: 'auth-code',
@@ -31,6 +33,8 @@ function LoginPage() {
                     let user;
                     try {
                         user = JSON.parse(authKey).data.user; // Parse Auth_key để lấy thông tin user
+                        // console.log(user);
+                        dispatch({ type: 'LOGIN', payload: user });
                         // Điều hướng dựa trên role
 
                         if (user.role === Role.ADMIN) {
