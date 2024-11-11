@@ -19,9 +19,10 @@ export const AuthContext = createContext<{
     dispatch: React.Dispatch<authAction>;
 } | null>(null);
 
-const authReducer = (state: authType, action: authAction) => {
+export const authReducer = (state: authType, action: authAction) => {
     switch (action.type) {
         case 'LOGIN':
+            // console.log(action.payload);
             return action.payload;
         default:
             return state;

@@ -1,4 +1,3 @@
-import { Button } from 'antd';
 import './index.css';
 import SecondPart from './components/SecondPart';
 import FirstPart from './components/FirstPart';
