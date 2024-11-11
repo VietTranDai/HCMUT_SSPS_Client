@@ -12,13 +12,17 @@ interface FileWithPreview extends File {
 const FileUpload: React.FC = () => {
   const [file, setFile] = useState<FileWithPreview | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
 
   const onDrop = (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
+    // Clear previous error and progress when a new file is selected
+    setErrorMessage('');
+    setUploadProgress(0);
+
     if (rejectedFiles.length > 0) {
       setErrorMessage('File không hợp lệ. Vui lòng chọn tệp với kích thước nhỏ hơn 5MB và định dạng .doc, .docx, hoặc .pdf.');
       setFile(null);
     } else {
-      setErrorMessage('');
       setFile(acceptedFiles[0] as FileWithPreview);
     }
   };
@@ -43,11 +47,18 @@ const FileUpload: React.FC = () => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setUploadProgress(progress);
+          }
+        },
       });
 
       if (response.status === 200) {
         console.log('Tệp đã được tải lên thành công:', response.data);
         setFile(null);
+        setUploadProgress(0); // Reset progress after successful upload
       } else {
         setErrorMessage('Có lỗi xảy ra khi tải lên.');
       }
@@ -74,10 +85,10 @@ const FileUpload: React.FC = () => {
 
   return (
     <div className='upload-section'>
-      <h3>Đăng tải tài liệu</h3>
+      <div className='Heading'>Đăng tải tài liệu</div>
       <div {...getRootProps()} className='upload-area'>
         <input {...getInputProps()} />
-        <p>Thả tập tin vào đây để tải lên</p>
+        <strong style={{ margin: '10px' }}>Thả tập tin vào đây để tải lên</strong>
         <p>Kích thước tập tin tải lên (tối đa 5 MB) và các loại tập tin được phép tải lên (.docx, .pdf, .doc)</p>
         <button onClick={handleButtonClick} className='upload-button'>
           Đăng tải
@@ -92,6 +103,11 @@ const FileUpload: React.FC = () => {
           <div className='column2'>
             <p>{file.name}</p>
             <p>{(file.size / (1024 * 1024)).toFixed(1)} MB</p>
+            {/* Progress Bar */}
+            <div className="progress-container">
+              <div className="progress-bar" style={{ width: `${uploadProgress}%` }} />
+            </div>
+            <div className="progress-text">{uploadProgress}%</div>
           </div>
         </div>
       )}

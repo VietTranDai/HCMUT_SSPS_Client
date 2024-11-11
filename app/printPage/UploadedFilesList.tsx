@@ -19,15 +19,15 @@ const UploadedFilesList: React.FC = () => {
   const getIconForFile = (file: { name: string }) => {
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
     if (fileExtension === 'pdf') {
-      return PdfIcon;  // Return the image import (StaticImageData)
+      return PdfIcon;  
     } else if (fileExtension === 'docx' || fileExtension === 'doc') {
-      return WordIcon;  // Return the image import (StaticImageData)
+      return WordIcon;  
     }
-    return undefined;  // No icon for other file types
+    return undefined; 
   };
   return (
     <div className="uploaded-files-list">
-      <h3>Tệp đính kèm</h3>
+      <div className='Heading'>Tệp đính kèm</div>
       <table>
         <thead>
           <tr>
