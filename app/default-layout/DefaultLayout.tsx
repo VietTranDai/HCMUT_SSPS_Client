@@ -1,8 +1,6 @@
-
-
+'use client';
 const DefaultLayout = () => {
-    return <div>
-    </div>;
+    return <div></div>;
 };
 
 export default DefaultLayout;
