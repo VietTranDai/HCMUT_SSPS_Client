@@ -42,7 +42,7 @@ function LoginPage() {
                     const authKey = Cookies.get(AUTH_KEY);
                     // Nếu không có Auth_key, chuyển hướng đến trang login
                     if (!authKey) {
-                        router.push('/login');
+                        router.push('/homepage');
                         return;
                     }
                     let user;
@@ -67,7 +67,7 @@ function LoginPage() {
                         }
                     } catch (error) {
                         console.error(error);
-                        router.push('/login');
+                        router.push('/homepage');
                         return;
                     }
                 } else {

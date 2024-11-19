@@ -15,7 +15,7 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
 
         // Nếu không có Auth_key, chuyển hướng đến trang login
         if (!authKey) {
-            router.push('/login');
+            router.push('/homepage');
             return;
         }
 
@@ -26,22 +26,22 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
             // Điều hướng dựa trên role
             const pathname = window.location.pathname;
             if (pathname.startsWith('/admin') && user.role !== Role.ADMIN) {
-                router.push('/login');
+                router.push('/homepage');
                 return;
             }
 
             if (pathname.startsWith('/customer') && user.role !== Role.CUSTOMER) {
-                router.push('/login');
+                router.push('/homepage');
                 return;
             }
 
             if (pathname.startsWith('/spso') && user.role !== Role.SPSO) {
-                router.push('/login');
+                router.push('/homepage');
                 return;
             }
         } catch (error) {
             console.error(error);
-            router.push('/login');
+            router.push('/homepage');
             return;
         }
     }, [router]);

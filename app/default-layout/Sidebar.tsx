@@ -3,7 +3,7 @@
 import hcmut from '../assets/logo_bku.png';
 import Link from 'next/link';
 import './layout.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIndexContext } from '../hooks/useIndexContext';
 
 const Sidebar = () => {
@@ -31,6 +31,7 @@ const Sidebar = () => {
             link: '/customer'
         }
     ];
+
     return (
         <div style={{ minHeight: '100vh', background: '#4663B7', width: '250px' }}>
             <div style={{ display: 'flex', justifyContent: 'center' }}>

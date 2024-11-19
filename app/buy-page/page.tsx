@@ -29,7 +29,7 @@ export default function Home() {
         status: ''
     };
 
-    const [data, setData] = useState<DataType>(initialData);
+    // const [data, setData] = useState<DataType>(initialData);
     const [datas, setDatas] = useState<DataType[]>([]);
     const [noPage, setNoPage] = useState<number>(0);
     const [i, setI] = useState<number>(8);
