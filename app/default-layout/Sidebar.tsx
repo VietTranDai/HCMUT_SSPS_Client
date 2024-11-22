@@ -24,11 +24,11 @@ const Sidebar = () => {
         },
         {
             title: 'LỊCH SỬ IN',
-            link: '/customer'
+            link: '/history-print-page'
         },
         {
             title: 'LỊCH SỬ GIAO DỊCH',
-            link: '/customer'
+            link: '/history-buy-page'
         }
     ];
 
