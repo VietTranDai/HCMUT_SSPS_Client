@@ -9,13 +9,30 @@ import { Role } from '@/types/role';
 import { useState } from 'react';
 import { removeCookie } from '@/lib/helpers/cookieStorage';
 import Cookies from 'js-cookie'; // Sử dụng thư viện js-cookie để lấy cookies
+import { useAuthContext } from '../hooks/useAuthContext';
+import hcmut from '@/app/assets/hcmut.png';
+import './index.css';
 
 const { Title } = Typography;
 
 function LoginPage() {
     const [role, setRole] = useState<Role>(Role.CUSTOMER); // State for role
     const router = useRouter();
-
+    const { auth, dispatch } = useAuthContext();
+    const login_button = [
+        {
+            title: 'Tài khoản HCMUT',
+            role: Role.CUSTOMER
+        },
+        {
+            title: 'Quản trị viên',
+            role: Role.ADMIN
+        },
+        {
+            title: 'SPSO',
+            role: Role.SPSO
+        }
+    ];
     const handleLogin = useGoogleLogin({
         flow: 'auth-code',
         onSuccess: async ({ code }) => {
@@ -25,7 +42,7 @@ function LoginPage() {
                     const authKey = Cookies.get(AUTH_KEY);
                     // Nếu không có Auth_key, chuyển hướng đến trang login
                     if (!authKey) {
-                        router.push('/login');
+                        router.push('/homepage');
                         return;
                     }
                     let user;
@@ -39,7 +56,8 @@ function LoginPage() {
                         }
 
                         if (user.role === Role.CUSTOMER) {
-                            router.push('/customer');
+                            dispatch({ type: 'LOGIN', payload: user });
+                            router.push('/homepage');
                             return;
                         }
 
@@ -49,7 +67,7 @@ function LoginPage() {
                         }
                     } catch (error) {
                         console.error(error);
-                        router.push('/login');
+                        router.push('/homepage');
                         return;
                     }
                 } else {
@@ -69,11 +87,21 @@ function LoginPage() {
     };
 
     return (
-        <div>
-            {/* Todo: Make login page */}
-            <Button onClick={() => onLoginClick(Role.CUSTOMER)}>Customer</Button>
-            <Button onClick={() => onLoginClick(Role.ADMIN)}>Admin</Button>
-            <Button onClick={() => onLoginClick(Role.SPSO)}>Spso</Button>
+        <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center', marginTop: '25px' }}>
+            <div className="login-container">
+                {/* Todo: Make login page */}
+                <h1 style={{ marginTop: '40px' }}>SPSS Service</h1>
+                <img src={hcmut.src} style={{ height: '100px', marginTop: '10px', marginBottom: '18px' }}></img>
+                <div style={{ fontWeight: '800', fontSize: '18px' }}>Đăng nhập bằng tải khoản của bạn trên </div>
+                <div style={{ display: 'flex', flexDirection: 'column', marginTop: '30px', justifyContent: 'space-between', height: '120px' }}>
+                    {login_button.map((btn, index) => (
+                        <div key={index} className="login-btn" onClick={() => onLoginClick(btn.role)}>
+                            {index === 0 && <img src={hcmut.src} style={{ height: '25px', marginRight: '10px' }}></img>}
+                            {btn.title}
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 }
