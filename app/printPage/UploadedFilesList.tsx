@@ -1,7 +1,7 @@
-"use client"
-import React, { useEffect, useState } from 'react';
-import PdfIcon from './pdf.png';
-import WordIcon from './doc.png';
+"use client";
+import React, { useEffect, useState } from "react";
+import PdfIcon from "./pdf.png";
+import WordIcon from "./doc.png";
 
 interface FileItem {
   name: string;
@@ -11,39 +11,77 @@ interface FileItem {
 }
 
 const UploadedFilesList: React.FC = () => {
-  const [files, setFiles] = useState<FileItem[]>([
-    { name: '2211738_Lab3a.pdf', dateModified: '24/10/2024', size: '200 KB', uploadDate: '24/10/2024' },
-    { name: '2211738_Lab3b.pdf', dateModified: '24/10/2024', size: '200 KB', uploadDate: '24/10/2024' },
-  ]);
+  const [files, setFiles] = useState<FileItem[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const getIconForFile = (file: { name: string }) => {
-    const fileExtension = file.name.split('.').pop()?.toLowerCase();
-    if (fileExtension === 'pdf') {
-      return PdfIcon;  
-    } else if (fileExtension === 'docx' || fileExtension === 'doc') {
-      return WordIcon;  
+    if (file.name === undefined)
+      return undefined;
+    const fileExtension = file.name.split(".").pop()?.toLowerCase();
+    if (fileExtension === "pdf") {
+      return PdfIcon;
+    } else if (fileExtension === "docx" || fileExtension === "doc") {
+      return WordIcon;
     }
-    return undefined; 
+    return undefined;
   };
+
+  useEffect(() => {
+    // Replace with your API URL
+    const fetchFiles = async () => {
+      try {
+        const response = await fetch("https://673c001a96b8dcd5f3f82946.mockapi.io/api/a1/file"); // Thay URL API ở đây
+        if (!response.ok) {
+          throw new Error(`Failed to fetch files: ${response.statusText}`);
+        }
+        const data: FileItem[] = await response.json();
+        setFiles(data);
+      } catch (err: any) {
+        setError(err.message || "Unknown error");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFiles();
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div className="uploaded-files-list">
-      <div className='Heading'>Tệp đính kèm</div>
+      <div className="Heading">Tệp đính kèm</div>
       <table>
         <thead>
           <tr>
-            <th className="checkbox-cell"><input type="checkbox" /></th>
-            <th style={{ textAlign: 'left' }}>Tên tập tin</th>
+            <th className="checkbox-cell">
+              <input type="checkbox" />
+            </th>
+            <th style={{ textAlign: "left" }}>Tên tập tin</th>
             <th>Dung lượng</th>
             <th>Ngày đăng tải</th>
-            <th>Ngày chỉnh sửa</th>    
+            <th>Ngày chỉnh sửa</th>
           </tr>
         </thead>
         <tbody>
           {files.map((file, index) => (
             <tr key={index}>
-              <td><input type="checkbox" /></td>
-              <td style={{ textAlign: 'left' }}>
-                <img src={getIconForFile(file)?.src} className="ico2" alt="File Icon" />
+              <td>
+                <input type="checkbox" />
+              </td>
+              <td style={{ textAlign: "left" }}>
+                <img
+                  src={getIconForFile(file)?.src}
+                  className="ico2"
+                  alt="File Icon"
+                />
                 {file.name}
               </td>
               <td>{file.size}</td>
