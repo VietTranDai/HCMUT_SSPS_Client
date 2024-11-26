@@ -8,7 +8,7 @@ const SmallMenu = React.forwardRef<HTMLDivElement, {}>((props, ref) => {
     const router = useRouter();
     return (
         <div ref={ref} style={{ background: '#FFFFFF', position: 'absolute', right: '30px', top: '100px', width: '220px', height: '200px', borderTopLeftRadius: '15px', borderTopRightRadius: '15px' }}>
-            <div className="small-menu-content" onClick={() => router.push('/user-account')}>
+            <div className="small-menu-content" onClick={() => router.push('/customer/user-account')}>
                 Thông tin tài khoản
             </div>
             <div className="small-menu-content">Cài đặt</div>

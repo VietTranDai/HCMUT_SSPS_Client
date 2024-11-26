@@ -19,6 +19,7 @@ export const indexContext = createContext<{
 export const indexReducer = (state: number, action: indexAction) => {
     switch (action.type) {
         case 'INDEX':
+            localStorage.setItem('index', JSON.stringify(action.payload));
             return action.payload;
         default:
             return state;

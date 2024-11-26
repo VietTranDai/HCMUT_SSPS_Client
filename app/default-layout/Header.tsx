@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useEffect, useState, useRef } from 'react';
 import SmallMenu from './SmallMenu';
+import { AUTH_KEY } from '@/lib/services/auth.service'; // Import AUTH_KEY
+import Cookies from 'js-cookie';
 
 const Header = () => {
     const router = useRouter();
@@ -12,6 +14,14 @@ const Header = () => {
     let menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        const authKey = Cookies.get(AUTH_KEY);
+        try {
+            if (authKey) {
+                dispatch({ type: 'LOGIN', payload: JSON.parse(authKey as string).data.user });
+            }
+        } catch (err) {
+            console.log(err);
+        }
         let handler = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
             if (menuRef.current && !menuRef.current?.contains(e.target as HTMLDivElement) && !target.closest('img')) {

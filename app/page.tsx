@@ -14,7 +14,7 @@ export default function MyComponent() {
 
         // Nếu Auth_key không tồn tại, có thể điều hướng về trang đăng nhập hoặc xử lý lỗi
         if (!authKey) {
-            router.push('/homepage');
+            router.push('/login');
             return;
         }
 
@@ -28,7 +28,7 @@ export default function MyComponent() {
                     router.push('/admin');
                     break;
                 case Role.CUSTOMER:
-                    router.push('/homepage');
+                    router.push('/customer/homepage');
                     break;
                 default:
                     router.push('/spso');
@@ -37,7 +37,7 @@ export default function MyComponent() {
         } catch (error) {
             console.error('Lỗi parse JSON: ', error);
             // Điều hướng về login nếu lỗi parse xảy ra
-            router.push('/homepage');
+            router.push('/login');
         }
     }, []); // Chỉ chạy một lần khi component mount
 

@@ -1,4 +1,4 @@
-import admin from '../../assets/admin.png';
+import admin from '@/app/assets/admin.png';
 import technician from '@/app/assets/technician.png';
 import administrator from '@/app/assets/administrator (1).png';
 import manager from '@/app/assets/management.png';
