@@ -18,6 +18,7 @@ const Header = () => {
         try {
             if (authKey) {
                 dispatch({ type: 'LOGIN', payload: JSON.parse(authKey as string).data.user });
+                console.log(JSON.parse(authKey as string).data.user);
             }
         } catch (err) {
             console.log(err);

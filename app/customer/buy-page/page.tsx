@@ -7,6 +7,7 @@ import type { InputNumberProps, TableColumnsType, TableProps } from 'antd';
 import './index.css';
 import { MouseEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { PurchaseApi } from './axios';
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
@@ -178,8 +179,16 @@ export default function Home() {
         }
     ];
 
+    const id = '56406ed2-1c66-4ec7-8985-5931c85c836b';
     useEffect(() => {
         setDatas(dataSource);
+        PurchaseApi.getAllBills(id)
+            .then((res) => {
+                console.log(res.data);
+            })
+            .catch(() => {
+                console.log('Can not fetch the data');
+            });
     }, []);
     return (
         <div>
