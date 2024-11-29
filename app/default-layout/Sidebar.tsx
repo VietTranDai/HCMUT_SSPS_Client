@@ -6,32 +6,39 @@ import './layout.css';
 import { useEffect, useState } from 'react';
 import { useIndexContext } from '../hooks/useIndexContext';
 
-const Sidebar = () => {
+export interface SidebarType {
+    title: string;
+    link: string;
+}
+interface SidebarProps {
+    sidebar_content: SidebarType[];
+}
+const Sidebar = ({ sidebar_content }: SidebarProps) => {
     const { curIndex, dispatch } = useIndexContext();
     const [prevIndex, setPrevIndex] = useState<number>(0);
     // const [cont, setCont] = useState<number>(0);
-    const sidebar_content = [
-        {
-            title: 'TRANG CHỦ',
-            link: '/customer/homepage'
-        },
-        {
-            title: 'IN TÀI LIỆU',
-            link: '/customer/printPage'
-        },
-        {
-            title: 'MUA TRANG IN',
-            link: '/customer/buy-page'
-        },
-        {
-            title: 'LỊCH SỬ IN',
-            link: '/customer/history-print-page'
-        },
-        {
-            title: 'LỊCH SỬ GIAO DỊCH',
-            link: '/customer/history-buy-page'
-        }
-    ];
+    // const sidebar_content = [
+    //     {
+    //         title: 'TRANG CHỦ',
+    //         link: '/customer/homepage'
+    //     },
+    //     {
+    //         title: 'IN TÀI LIỆU',
+    //         link: '/customer/printPage'
+    //     },
+    //     {
+    //         title: 'MUA TRANG IN',
+    //         link: '/customer/buy-page'
+    //     },
+    //     {
+    //         title: 'LỊCH SỬ IN',
+    //         link: '/customer/history-print-page'
+    //     },
+    //     {
+    //         title: 'LỊCH SỬ GIAO DỊCH',
+    //         link: '/customer/history-buy-page'
+    //     }
+    // ];
 
     useEffect(() => {
         // dispatch({ type: 'INDEX', payload: prevIndex });

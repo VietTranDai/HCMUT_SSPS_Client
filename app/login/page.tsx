@@ -62,7 +62,7 @@ function LoginPage() {
                         }
 
                         if (user.role === Role.SPSO) {
-                            router.push('/spso');
+                            router.push('/spso/printers');
                             return;
                         }
                     } catch (error) {

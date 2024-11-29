@@ -9,24 +9,8 @@ import AuthWrapper from '@/lib/helpers/AuthWrapper';
 const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const sidebar_content: SidebarType[] = [
         {
-            title: 'TRANG CHỦ',
-            link: '/customer/homepage'
-        },
-        {
-            title: 'IN TÀI LIỆU',
-            link: '/customer/printPage'
-        },
-        {
-            title: 'MUA TRANG IN',
-            link: '/customer/buy-page'
-        },
-        {
-            title: 'LỊCH SỬ IN',
-            link: '/customer/history-print-page'
-        },
-        {
-            title: 'LỊCH SỬ GIAO DỊCH',
-            link: '/customer/history-buy-page'
+            title: 'Danh sách máy in',
+            link: '/spso/printers'
         }
     ];
 

@@ -8,14 +8,11 @@ import './index.css';
 import { MouseEvent, useEffect, useState, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { FilterConfirmProps, FilterDropdownProps } from 'antd/es/table/interface';
-import { clear } from 'console';
 import { SearchOutlined } from '@ant-design/icons';
 import type { InputRef, TableColumnType } from 'antd';
 import { Input, Space } from 'antd';
-import type { DatePickerProps } from 'antd';
 import { Card, Pagination } from 'antd';
 import dayjs from 'dayjs';
-import { stringify } from 'querystring';
 
 interface DataType {
     key: number;

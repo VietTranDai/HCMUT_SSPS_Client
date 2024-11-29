@@ -7,7 +7,8 @@ import type { InputNumberProps, TableColumnsType, TableProps } from 'antd';
 import './index.css';
 import { MouseEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { PurchaseApi } from './axios';
+import { PurchaseApi, PurchaseBills } from '../services/purchase';
+import dayjs from 'dayjs';
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
@@ -29,30 +30,28 @@ export default function Home() {
     };
 
     // const [data, setData] = useState<DataType>(initialData);
+    const [purchases, setPurchases] = useState<PurchaseBills[]>([]);
     const [datas, setDatas] = useState<DataType[]>([]);
     const [noPage, setNoPage] = useState<number>(0);
-    const [i, setI] = useState<number>(8);
+    // const [i, setI] = useState<number>(8);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    const [selectedRows, setSelectedRows] = useState<DataType[]>([]);
+    const [selectedRows, setSelectedRows] = useState<PurchaseBills[]>([]);
     const [totalCost, setTotalCost] = useState<number>(0);
     const [confirm, setConfirm] = useState<boolean>(false);
 
-    const onSelectChange = (newSelectedRowKeys: React.Key[], newSelectedRows: DataType[]) => {
+    const onSelectChange = (newSelectedRowKeys: React.Key[], newSelectedRows: PurchaseBills[]) => {
         console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
         setSelectedRows(newSelectedRows);
         setConfirm(!confirm);
-        // Extract the 'no_of_page' values from selected rows
-        // const selectedNoOfPages = newSelectedRows.map((row) => row.no_of_page);
-        // console.log('Selected no_of_page values:', selectedNoOfPages);
     };
 
-    const rowSelection: TableRowSelection<DataType> = {
+    const rowSelection: TableRowSelection<PurchaseBills> = {
         selectedRowKeys,
         onChange: onSelectChange,
         getCheckboxProps: (record) => ({
-            disabled: selectedRowKeys.length > 0 && !selectedRowKeys.includes(record.key)
+            disabled: selectedRowKeys.length > 0 && !selectedRowKeys.includes(record.id)
         })
     };
 
@@ -66,8 +65,8 @@ export default function Home() {
         }
         // setData({ key: noPage, buy_date: '25/ 10/ 2024', pay_date: 'Chưa xác định', status: 'Chưa thanh toán', no_of_page: noPage });
         // console.log(data);
-        setDatas([{ key: i, buy_date: '25/ 10/ 2024', pay_date: 'Chưa xác định', status: 'Chưa thanh toán', no_of_page: noPage }, ...datas]);
-        setI(i + 1);
+        // setDatas([{ key: i, buy_date: '25/ 10/ 2024', pay_date: 'Chưa xác định', status: 'Chưa thanh toán', no_of_page: noPage }, ...datas]);
+        // setI(i + 1);
         setNoPage(0);
         toast.success('Đặt mua thành công');
     };
@@ -82,7 +81,7 @@ export default function Home() {
 
     const handlePayment = () => {
         setModalOpen(true);
-        setTotalCost(500 * selectedRows[0].no_of_page);
+        setTotalCost(500 * selectedRows[0].numberOfPage);
     };
 
     const handleConfirm = () => {
@@ -105,86 +104,57 @@ export default function Home() {
             </>
         );
     };
-    const dataSource: DataType[] = [
+    const columns: TableColumnsType<PurchaseBills> = [
         {
-            key: 1,
-            no_of_page: 500,
-            buy_date: '24/ 10/ 2024',
-            pay_date: 'Chưa xác định',
-            status: 'Chưa thanh toán'
+            title: 'Mã đơn',
+            dataIndex: 'orderId',
+            width: 150,
+            key: 'orderId'
         },
-        {
-            key: 2,
-            no_of_page: 500,
-            buy_date: '24/ 10/ 2024',
-            pay_date: 'Chưa xác định',
-            status: 'Chưa thanh toán'
-        },
-        {
-            key: 3,
-            no_of_page: 500,
-            buy_date: '24/ 10/ 2024',
-            pay_date: 'Chưa xác định',
-            status: 'Chưa thanh toán'
-        },
-        {
-            key: 4,
-            no_of_page: 500,
-            buy_date: '24/ 10/ 2024',
-            pay_date: 'Chưa xác định',
-            status: 'Chưa thanh toán'
-        },
-        {
-            key: 5,
-            no_of_page: 500,
-            buy_date: '24/ 10/ 2024',
-            pay_date: 'Chưa xác định',
-            status: 'Chưa thanh toán'
-        },
-        {
-            key: 6,
-            no_of_page: 500,
-            buy_date: '24/ 10/ 2024',
-            pay_date: 'Chưa xác định',
-            status: 'Chưa thanh toán'
-        },
-        {
-            key: 7,
-            no_of_page: 500,
-            buy_date: '24/ 10/ 2024',
-            pay_date: 'Chưa xác định',
-            status: 'Chưa thanh toán'
-        }
-    ];
-    const columns = [
         {
             title: 'Số lượng trang',
-            dataIndex: 'no_of_page',
-            width: 150
-        },
-        {
-            title: 'Ngày mua',
-            dataIndex: 'buy_date',
-            width: 200
+            dataIndex: 'numberOfPage',
+            width: 150,
+            key: 'numberOfPage',
+            sorter: (a, b) => a.numberOfPage - b.numberOfPage
         },
         {
             title: 'Ngày thanh toán',
-            dataIndex: 'pay_date',
-            width: 200
+            dataIndex: 'transactionTime',
+            width: 200,
+            key: 'transactionTime',
+            render: (value) => dayjs(value).format('YYYY-MM-DD')
         },
         {
             title: 'Trạng thái',
-            dataIndex: 'status',
-            width: 150
+            dataIndex: 'purchaseStatus',
+            width: 150,
+            key: 'purchaseStatus'
+        },
+        {
+            title: 'Tổng (VND)',
+            dataIndex: 'price',
+            width: 150,
+            key: 'price',
+            sorter: (a, b) => a.price - b.price
         }
     ];
 
     const id = '56406ed2-1c66-4ec7-8985-5931c85c836b';
     useEffect(() => {
-        setDatas(dataSource);
+        // setDatas(dataSource);
         PurchaseApi.getAllBills(id)
             .then((res) => {
-                console.log(res.data);
+                // console.log(res.data);
+                // const datasWithKeys = res.data.map((item: PurchaseBills) => (
+                //     ...item,
+                //     key:
+                // ))
+                const datasWithKeys = res.data.map((item: PurchaseBills) => ({
+                    ...item, // Spread the existing properties of `item`
+                    key: item.id // Add or override the `key` property with a unique identifier
+                }));
+                setPurchases(datasWithKeys ?? []);
             })
             .catch(() => {
                 console.log('Can not fetch the data');
@@ -195,12 +165,6 @@ export default function Home() {
             <h1 style={{ color: '#7E7E7E', fontWeight: 'bolder', display: 'flex', justifyContent: 'center', fontSize: '28px', marginTop: '20px', marginBottom: '20px' }}>MUA TRANG IN</h1>
             <div style={{ paddingLeft: '100px', paddingTop: '50px', marginBottom: '100px' }}>
                 <h1 style={{ fontWeight: '400' }}>Số lượng trang</h1>
-                {/* <Card style={{ display: 'flex', width: '1100px' }}>
-                    <InputNumber placeholder="Số lượng trang (tối đa: 610 tờ)" style={{ width: '350px', display: 'flex', alignItems: 'center' }} onChange={ChangeNoPage}></InputNumber>
-                    <Button style={{ color: 'white', backgroundColor: '#4663B7', height: '50px', width: '150px', fontWeight: '500', marginLeft: '50px' }} onClick={handleInsert}>
-                        Đặt mua
-                    </Button>
-                </Card> */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '200px', marginTop: '30px', width: '1100px', borderRadius: '10px', backgroundColor: 'white', boxShadow: '0px 4px 8px rgba(0,0,0,0.1)' }}>
                     <InputNumber placeholder="Số lượng trang (tối đa: 610 tờ)" style={{ width: '400px', height: '50px', display: 'flex', alignItems: 'center' }} onChange={ChangeNoPage}></InputNumber>
                     <Button style={{ color: 'white', backgroundColor: '#4663B7', height: '50px', width: '150px', fontWeight: '500', marginLeft: '50px' }} onClick={handleInsert}>
@@ -210,24 +174,10 @@ export default function Home() {
 
                 <div style={{ marginTop: '100px' }}>
                     <h1 style={{ fontWeight: '400' }}>Đơn thanh toán</h1>
-                    {/* <div style={{ width: '1100px', marginTop: '30px', border: '1px solid red' }}>
-                        <Table<DataType>
-                            dataSource={datas}
-                            columns={columns}
-                            rowSelection={rowSelection}
-                            pagination={{
-                                pageSize: 5
-                            }}
-                        ></Table>
-                        <div style={{ display: 'flex', justifyContent: 'end', width: '1100px' }}>
-                            <Button style={{ width: '170px', height: '50px', border: '1px solid black', fontSize: '18px', fontWeight: '300' }} disabled={!confirm} onClick={handlePayment}>
-                                Thanh toán
-                            </Button>
-                        </div>
-                    </div> */}
                     <Card style={{ width: '1100px', marginTop: '30px' }}>
-                        <Table<DataType>
-                            dataSource={datas}
+                        <Table<PurchaseBills>
+                            dataSource={purchases}
+                            key={'purchase-bill'}
                             columns={columns}
                             rowSelection={rowSelection}
                             pagination={{
@@ -250,7 +200,7 @@ export default function Home() {
                     <div className="modal-content">
                         <div>Số lượng trang</div>
                         <div>
-                            {selectedRows[0]?.no_of_page} <span style={{ fontSize: '20px', marginTop: '10px', marginBottom: '20px' }}>đ</span>
+                            {selectedRows[0]?.numberOfPage} <span style={{ fontSize: '20px', marginTop: '10px', marginBottom: '20px' }}>đ</span>
                         </div>
                     </div>
                     <div className="modal-content">
