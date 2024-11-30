@@ -7,7 +7,8 @@ import type { InputNumberProps, TableColumnsType, TableProps } from 'antd';
 import './index.css';
 import { MouseEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { PurchaseApi, PurchaseBills } from '../services/purchase';
+import { MomoPurchaseResponse, PurchaseApi, PurchaseBills } from '../services/purchase';
+import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
@@ -21,12 +22,17 @@ interface DataType {
 }
 
 export default function Home() {
-    const initialData: DataType = {
-        key: 0,
-        no_of_page: 0,
-        buy_date: '',
-        pay_date: '',
-        status: ''
+    const initialMomoPurchaseResponse: MomoPurchaseResponse = {
+        partnerCode: 'string',
+        orderId: '',
+        requestId: '',
+        amount: 0,
+        responseTime: 0,
+        message: '',
+        resultCode: 0,
+        payUrl: '',
+        deeplink: '',
+        qrCodeUrl: ''
     };
 
     // const [data, setData] = useState<DataType>(initialData);
@@ -39,6 +45,10 @@ export default function Home() {
     const [selectedRows, setSelectedRows] = useState<PurchaseBills[]>([]);
     const [totalCost, setTotalCost] = useState<number>(0);
     const [confirm, setConfirm] = useState<boolean>(false);
+    const navigate = useRouter();
+
+    // Related to MOMO
+    const customer_id = '56406ed2-1c66-4ec7-8985-5931c85c836b';
 
     const onSelectChange = (newSelectedRowKeys: React.Key[], newSelectedRows: PurchaseBills[]) => {
         console.log('selectedRowKeys changed: ', newSelectedRowKeys);
@@ -55,7 +65,7 @@ export default function Home() {
         })
     };
 
-    const handleInsert = (e: MouseEvent<HTMLButtonElement>) => {
+    const handleInsert = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
         if (noPage <= 0 || noPage >= 610) {
@@ -67,8 +77,20 @@ export default function Home() {
         // console.log(data);
         // setDatas([{ key: i, buy_date: '25/ 10/ 2024', pay_date: 'Chưa xác định', status: 'Chưa thanh toán', no_of_page: noPage }, ...datas]);
         // setI(i + 1);
-        setNoPage(0);
-        toast.success('Đặt mua thành công');
+        try {
+            const curDate = dayjs(new Date()).format('YYYY-MM-DD');
+            const response = await PurchaseApi.createNewBill(customer_id, noPage * 500, 'ORD' + `${curDate}`, 'FAILED', noPage);
+
+            if (response) {
+                const dataWithKey = { key: response.data.id, ...response.data };
+                setPurchases([dataWithKey, ...purchases]);
+                toast.success('Đặt mua thành công');
+                setNoPage(0);
+            }
+        } catch (err) {
+            toast.error('Đặt mua thất bại');
+            throw err;
+        }
     };
 
     const handleOK = () => {
@@ -79,11 +101,22 @@ export default function Home() {
         setModalOpen(false);
     };
 
-    const handlePayment = () => {
-        setModalOpen(true);
-        setTotalCost(500 * selectedRows[0].numberOfPage);
-    };
+    // const handlePayment = () => {
+    //     setModalOpen(true);
+    //     setTotalCost(500 * selectedRows[0].numberOfPage);
+    // };
 
+    const handleMomoPurchase = async (totalPrice: number) => {
+        try {
+            const response = await PurchaseApi.purchaseBill(totalPrice);
+            if (response) {
+                console.log(response.data);
+                navigate.push(`${response.data.payUrl}`);
+            }
+        } catch (err) {
+            throw err;
+        }
+    };
     const handleConfirm = () => {
         setModalOpen(false);
         toast.success('Thanh toán thành công');
@@ -120,8 +153,8 @@ export default function Home() {
         },
         {
             title: 'Ngày thanh toán',
-            dataIndex: 'transactionTime',
             width: 200,
+            dataIndex: 'transactionTime',
             key: 'transactionTime',
             render: (value) => dayjs(value).format('YYYY-MM-DD')
         },
@@ -133,17 +166,17 @@ export default function Home() {
         },
         {
             title: 'Tổng (VND)',
-            dataIndex: 'price',
+            dataIndex: 'numberOfPage',
             width: 150,
             key: 'price',
-            sorter: (a, b) => a.price - b.price
+            sorter: (a, b) => a.price - b.price,
+            render: (value) => 500 * value
         }
     ];
 
-    const id = '56406ed2-1c66-4ec7-8985-5931c85c836b';
     useEffect(() => {
         // setDatas(dataSource);
-        PurchaseApi.getAllBills(id)
+        PurchaseApi.getAllBills(customer_id)
             .then((res) => {
                 // console.log(res.data);
                 // const datasWithKeys = res.data.map((item: PurchaseBills) => (
@@ -154,7 +187,7 @@ export default function Home() {
                     ...item, // Spread the existing properties of `item`
                     key: item.id // Add or override the `key` property with a unique identifier
                 }));
-                setPurchases(datasWithKeys ?? []);
+                setPurchases(datasWithKeys.filter((data) => data.purchaseStatus !== 'COMPLETED') ?? []);
             })
             .catch(() => {
                 console.log('Can not fetch the data');
@@ -185,7 +218,13 @@ export default function Home() {
                             }}
                         ></Table>
                         <div style={{ display: 'flex', justifyContent: 'end' }}>
-                            <Button style={{ width: '170px', height: '50px', border: '1px solid black', fontSize: '18px', fontWeight: '300' }} disabled={!confirm} onClick={handlePayment}>
+                            <Button
+                                style={{ width: '170px', height: '50px', border: '1px solid black', fontSize: '18px', fontWeight: '300' }}
+                                disabled={!confirm}
+                                onClick={() => {
+                                    handleMomoPurchase(selectedRows[0]?.numberOfPage * 500);
+                                }}
+                            >
                                 Thanh toán
                             </Button>
                         </div>

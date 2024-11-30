@@ -1,4 +1,5 @@
 import axiosClient from '../../axios/axiosConfig';
+import axios from 'axios';
 
 interface ApiResponse<T> {
     data: T;
@@ -16,6 +17,34 @@ export interface PurchaseBills {
     purchaseStatus: string;
 }
 
+export interface MomoPurchaseBill {
+    partnerCode: 'MOMO';
+    orderId: string;
+    requestId: string;
+    extraData: string;
+    amount: number;
+    transId: number;
+    payType: string;
+    resultCode: number;
+    refundTrans: [];
+    message: string;
+    responseTime: number;
+    lastUpdated: number;
+    signature: null;
+}
+
+export interface MomoPurchaseResponse {
+    partnerCode: string;
+    orderId: string;
+    requestId: string;
+    amount: number;
+    responseTime: number;
+    message: string;
+    resultCode: number;
+    payUrl: string;
+    deeplink: string;
+    qrCodeUrl: string;
+}
 export const PurchaseApi = {
     getAllBills: async (id: string): Promise<ApiResponse<PurchaseBills[]>> => {
         try {
@@ -27,13 +56,13 @@ export const PurchaseApi = {
             throw err;
         }
     },
-    createNewBill: async (customerId: string, totalPrice: number, orderId: string, purchaseStatus: string, numberOfPage: number): Promise<ApiResponse<PurchaseBills>> => {
+    createNewBill: async (customerId: string, price: number, orderId: string, purchaseStatus: string, numberOfPage: number): Promise<ApiResponse<PurchaseBills>> => {
         try {
             const response = await axiosClient.post('/customer/purchase/create-new-log', {
                 customerId,
-                numberOfPage,
-                totalPrice,
                 orderId,
+                numberOfPage,
+                price,
                 purchaseStatus
             });
             return {
@@ -42,5 +71,19 @@ export const PurchaseApi = {
         } catch (err) {
             throw err;
         }
+    },
+    // chọn phương thức thanh toán
+    purchaseBill: async (no_of_page: number): Promise<ApiResponse<MomoPurchaseResponse>> => {
+        try {
+            const response = await axios.post('http://localhost:5000/payment', {
+                totalCost: no_of_page
+            });
+            return {
+                data: response.data
+            };
+        } catch (err) {
+            throw err;
+        }
     }
+    // Kiểm tra trạng thái thanh toán
 };
