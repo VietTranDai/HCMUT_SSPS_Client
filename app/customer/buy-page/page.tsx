@@ -221,15 +221,18 @@ export default function Home() {
                 const pid = JSON.parse(localStorage.getItem('purchase_id') || '')?.pid;
                 PurchaseApi.checkTransactionStatus(orderId)
                     .then(async (res) => {
+                        let response;
                         if (res.data.message === 'Thành công.') {
-                            const response = await PurchaseApi.updateTransactionStatus(pid, 'COMPLETED');
-                            try {
-                                if (response) {
-                                    handleGetBills(JSON.parse(authKey as string).data.user.id);
-                                }
-                            } catch {
-                                console.log('Can not get bills');
+                            response = await PurchaseApi.updateTransactionStatus(pid, 'COMPLETED');
+                        } else {
+                            response = await PurchaseApi.updateTransactionStatus(pid, 'FAILED');
+                        }
+                        try {
+                            if (response) {
+                                handleGetBills(JSON.parse(authKey as string).data.user.id);
                             }
+                        } catch {
+                            console.log('Can not get bills');
                         }
                         localStorage.removeItem('purchase_id');
                     })
@@ -275,7 +278,7 @@ export default function Home() {
                                         localStorage.setItem(
                                             'purchase_id',
                                             JSON.stringify({
-                                                order_id: orderId,
+                                                order_id: selectedRows[0].orderId,
                                                 pid: selectedRows[0].id
                                             })
                                         );
@@ -287,33 +290,6 @@ export default function Home() {
                     </Card>
                 </div>
             </div>
-
-            {/* <Modal open={modalOpen} onOk={handleOK} onCancel={handleCancel} footer={footerCustom}>
-                <div>
-                    <h1 style={{ color: '#4663B7', display: 'flex', justifyContent: 'center', fontSize: '20px', marginTop: '20px', marginBottom: '20px' }}>XÁC NHẬN THANH TOÁN</h1>
-
-                    <div className="modal-content">
-                        <div>Số lượng trang</div>
-                        <div>
-                            {selectedRows[0]?.numberOfPage} <span style={{ fontSize: '20px', marginTop: '10px', marginBottom: '20px' }}>đ</span>
-                        </div>
-                    </div>
-                    <div className="modal-content">
-                        <div>Đơn giá</div>
-                        <div>
-                            {500}
-                            <span style={{ fontSize: '20px', marginTop: '10px', marginBottom: '20px' }}>đ</span>
-                        </div>
-                    </div>
-                    <div style={{ border: '1px solid #000000' }}></div>
-                    <div className="modal-content">
-                        <div>Tổng cộng</div>
-                        <div>
-                            {totalCost} <span style={{ textDecoration: 'underline' }}>đ</span>
-                        </div>
-                    </div>
-                </div>
-            </Modal> */}
         </div>
     );
 }
