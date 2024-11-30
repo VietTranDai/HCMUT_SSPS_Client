@@ -20,7 +20,8 @@ export default function MyComponent() {
 
         try {
             // Giả sử authKey là một chuỗi JSON chứa thông tin role, ví dụ: { role: 'admin' }
-            const user = JSON.parse(authKey);
+
+            const user = JSON.parse(authKey as string).data.user;
             // Kiểm tra role của user và điều hướng
             console.log('User role: ', user.role);
             switch (user.role) {
