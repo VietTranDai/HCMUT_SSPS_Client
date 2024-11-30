@@ -21,6 +21,7 @@ const Header = () => {
                 console.log(JSON.parse(authKey as string).data.user);
             }
         } catch (err) {
+            // dispatch({type: 'LOGOUT', payload: {}})
             console.log(err);
         }
         let handler = (e: MouseEvent) => {

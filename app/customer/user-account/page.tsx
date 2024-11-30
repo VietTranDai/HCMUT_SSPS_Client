@@ -1,5 +1,9 @@
+'use client';
+
 import hcmut from '@/app/assets/hcmut.png';
+import { useEffect, useState } from 'react';
 import './index.css';
+import { PurchaseApi } from '../services/purchase';
 
 const UserAccount = () => {
     const user = {
@@ -10,6 +14,24 @@ const UserAccount = () => {
         sex: 'Nam',
         pageLeft: 70
     };
+    const customer_id = '0e103ef5-3694-444e-820b-8aee4c695225';
+    const [curNoPage, setCurNoPage] = useState<number>(70);
+    useEffect(() => {
+        PurchaseApi.getAllBills(customer_id)
+            .then((res) => {
+                let result = curNoPage;
+                res.data.map((bill) => {
+                    if (bill.purchaseStatus === 'COMPLETED') {
+                        // setCurNoPage(curNoPage + bill.numberOfPage);
+                        result += bill.numberOfPage;
+                    }
+                });
+                setCurNoPage(result);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div style={{ color: '#6DBCF5', fontWeight: '900', fontSize: '20px', marginTop: '50px' }}>THÔNG TIN TÀI KHOẢN</div>
@@ -42,7 +64,7 @@ const UserAccount = () => {
                 </div>
                 <div className="info-container">
                     <div className="info-header">Số trang còn dư</div>
-                    <div className="info">{user.pageLeft}</div>
+                    <div className="info">{curNoPage}</div>
                 </div>
             </div>
         </div>

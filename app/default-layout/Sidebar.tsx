@@ -14,7 +14,7 @@ interface SidebarProps {
     sidebar_content: SidebarType[];
 }
 const Sidebar = ({ sidebar_content }: SidebarProps) => {
-    const { curIndex, dispatch } = useIndexContext();
+    const { curIndex, setCurIndex } = useIndexContext();
     const [prevIndex, setPrevIndex] = useState<number>(0);
     // const [cont, setCont] = useState<number>(0);
     // const sidebar_content = [
@@ -43,7 +43,7 @@ const Sidebar = ({ sidebar_content }: SidebarProps) => {
     useEffect(() => {
         // dispatch({ type: 'INDEX', payload: prevIndex });
         if (localStorage.getItem('index') !== null) {
-            dispatch({ type: 'INDEX', payload: JSON.parse(localStorage.getItem('index') as string) });
+            setCurIndex({ type: 'INDEX', payload: JSON.parse(localStorage.getItem('index') as string) });
         }
     }, []);
 
@@ -57,7 +57,7 @@ const Sidebar = ({ sidebar_content }: SidebarProps) => {
                     <div key={index} className={curIndex === index ? 'sidebar-content sidebar-content-extra' : 'sidebar-content'}>
                         <Link
                             onClick={() => {
-                                dispatch({ type: 'INDEX', payload: index });
+                                setCurIndex({ type: 'INDEX', payload: index });
                             }}
                             href={content.link}
                             style={curIndex === index ? { textDecoration: 'none', color: '#7E7E7E' } : { textDecoration: 'none', color: '#E5DEDE' }}

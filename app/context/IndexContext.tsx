@@ -13,7 +13,7 @@ interface Props {
 
 export const indexContext = createContext<{
     curIndex: number;
-    dispatch: React.Dispatch<indexAction>;
+    setCurIndex: React.Dispatch<indexAction>;
 } | null>(null);
 
 export const indexReducer = (state: number, action: indexAction) => {
@@ -22,14 +22,15 @@ export const indexReducer = (state: number, action: indexAction) => {
             localStorage.setItem('index', JSON.stringify(action.payload));
             return action.payload;
         default:
+            localStorage.setItem('index', JSON.stringify(0));
             return state;
     }
 };
 
 const IndexContextProvider: React.FC<Props> = ({ children }: Props) => {
-    const [curIndex, dispatch] = React.useReducer(indexReducer, 0);
+    const [curIndex, setCurIndex] = React.useReducer(indexReducer, 0);
 
-    return <indexContext.Provider value={{ curIndex, dispatch }}>{children}</indexContext.Provider>;
+    return <indexContext.Provider value={{ curIndex, setCurIndex }}>{children}</indexContext.Provider>;
 };
 
 export default IndexContextProvider;

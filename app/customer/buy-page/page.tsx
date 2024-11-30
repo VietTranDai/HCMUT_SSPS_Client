@@ -1,15 +1,19 @@
 'use client';
 
-import { Button, InputNumber, ThemeConfig } from 'antd';
-import { Table, DatePicker, Modal, Card } from 'antd';
+import { Button, InputNumber } from 'antd';
+import { Table, Card, Tag } from 'antd';
 import type { InputNumberProps, TableColumnsType, TableProps } from 'antd';
 
 import './index.css';
 import { MouseEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { MomoPurchaseResponse, PurchaseApi, PurchaseBills } from '../services/purchase';
+import { PurchaseApi, PurchaseBills } from '../services/purchase';
 import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
+// import { useAuthContext } from '@/app/hooks/useAuthContext';
+import { AUTH_KEY } from '@/lib/services/auth.service'; // Import AUTH_KEY
+import Cookies from 'js-cookie';
+import { useAuthContext } from '@/app/hooks/useAuthContext';
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
@@ -22,19 +26,37 @@ interface DataType {
 }
 
 export default function Home() {
-    const initialMomoPurchaseResponse: MomoPurchaseResponse = {
-        partnerCode: 'string',
+    // const initialMomoPurchaseResponse: MomoPurchaseResponse = {
+    //     partnerCode: 'string',
+    //     orderId: '',
+    //     requestId: '',
+    //     amount: 0,
+    //     responseTime: 0,
+    //     message: '',
+    //     resultCode: 0,
+    //     payUrl: '',
+    //     deeplink: '',
+    //     qrCodeUrl: ''
+    // };
+    const initialPurchaseBill: PurchaseBills = {
+        id: '',
+        customerId: '',
         orderId: '',
-        requestId: '',
-        amount: 0,
-        responseTime: 0,
-        message: '',
-        resultCode: 0,
-        payUrl: '',
-        deeplink: '',
-        qrCodeUrl: ''
+        transactionTime: '',
+        numberOfPage: 0,
+        price: 0,
+        purchaseStatus: ''
     };
 
+    const Str_random = () => {
+        let result = '';
+        const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < 3; i++) {
+            const randomInd = Math.floor(Math.random() * characters.length);
+            result += characters.charAt(randomInd);
+        }
+        return result;
+    };
     // const [data, setData] = useState<DataType>(initialData);
     const [purchases, setPurchases] = useState<PurchaseBills[]>([]);
     const [datas, setDatas] = useState<DataType[]>([]);
@@ -43,12 +65,14 @@ export default function Home() {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const [selectedRows, setSelectedRows] = useState<PurchaseBills[]>([]);
-    const [totalCost, setTotalCost] = useState<number>(0);
+    // const [totalCost, setTotalCost] = useState<number>(0);
     const [confirm, setConfirm] = useState<boolean>(false);
     const navigate = useRouter();
 
     // Related to MOMO
-    const customer_id = '56406ed2-1c66-4ec7-8985-5931c85c836b';
+    // const customer_id = '0e103ef5-3694-444e-820b-8aee4c695225';
+    const [customerId, setCustomerId] = useState<string>('');
+    const [orderId, setOrderId] = useState<string>('');
 
     const onSelectChange = (newSelectedRowKeys: React.Key[], newSelectedRows: PurchaseBills[]) => {
         console.log('selectedRowKeys changed: ', newSelectedRowKeys);
@@ -73,13 +97,10 @@ export default function Home() {
             setNoPage(0);
             return;
         }
-        // setData({ key: noPage, buy_date: '25/ 10/ 2024', pay_date: 'Chưa xác định', status: 'Chưa thanh toán', no_of_page: noPage });
-        // console.log(data);
-        // setDatas([{ key: i, buy_date: '25/ 10/ 2024', pay_date: 'Chưa xác định', status: 'Chưa thanh toán', no_of_page: noPage }, ...datas]);
-        // setI(i + 1);
         try {
-            const curDate = dayjs(new Date()).format('YYYY-MM-DD');
-            const response = await PurchaseApi.createNewBill(customer_id, noPage * 500, 'ORD' + `${curDate}`, 'FAILED', noPage);
+            const randomStr = Str_random();
+            setOrderId(`ORD${randomStr}`);
+            const response = await PurchaseApi.createNewBill(customerId, noPage * 500, 'ORD' + `${randomStr}`, 'PENDING', noPage);
 
             if (response) {
                 const dataWithKey = { key: response.data.id, ...response.data };
@@ -101,14 +122,23 @@ export default function Home() {
         setModalOpen(false);
     };
 
-    // const handlePayment = () => {
-    //     setModalOpen(true);
-    //     setTotalCost(500 * selectedRows[0].numberOfPage);
-    // };
+    const handleGetBills = async (customer_id: string) => {
+        PurchaseApi.getAllBills(customer_id)
+            .then((res) => {
+                const datasWithKeys = res.data.map((item: PurchaseBills) => ({
+                    ...item, // Spread the existing properties of `item`
+                    key: item.id // Add or override the `key` property with a unique identifier
+                }));
+                setPurchases(datasWithKeys.filter((data) => data.purchaseStatus === 'PENDING') ?? []);
+            })
+            .catch(() => {
+                console.log('Can not fetch the data');
+            });
+    };
 
-    const handleMomoPurchase = async (totalPrice: number) => {
+    const handleMomoPurchase = async (orderId: string, totalPrice: number) => {
         try {
-            const response = await PurchaseApi.purchaseBill(totalPrice);
+            const response = await PurchaseApi.purchaseBill(orderId, totalPrice);
             if (response) {
                 console.log(response.data);
                 navigate.push(`${response.data.payUrl}`);
@@ -162,7 +192,14 @@ export default function Home() {
             title: 'Trạng thái',
             dataIndex: 'purchaseStatus',
             width: 150,
-            key: 'purchaseStatus'
+            key: 'purchaseStatus',
+            render: (_, record) => (
+                <>
+                    <Tag color="volcano" key={record.id}>
+                        {record.purchaseStatus}
+                    </Tag>
+                </>
+            )
         },
         {
             title: 'Tổng (VND)',
@@ -175,23 +212,35 @@ export default function Home() {
     ];
 
     useEffect(() => {
-        // setDatas(dataSource);
-        PurchaseApi.getAllBills(customer_id)
-            .then((res) => {
-                // console.log(res.data);
-                // const datasWithKeys = res.data.map((item: PurchaseBills) => (
-                //     ...item,
-                //     key:
-                // ))
-                const datasWithKeys = res.data.map((item: PurchaseBills) => ({
-                    ...item, // Spread the existing properties of `item`
-                    key: item.id // Add or override the `key` property with a unique identifier
-                }));
-                setPurchases(datasWithKeys.filter((data) => data.purchaseStatus !== 'COMPLETED') ?? []);
-            })
-            .catch(() => {
-                console.log('Can not fetch the data');
-            });
+        const authKey = Cookies.get(AUTH_KEY);
+        if (authKey) {
+            setCustomerId(JSON.parse(authKey as string).data.user.id);
+            console.log(JSON.parse(authKey as string).data.user.id);
+            if (localStorage.getItem('purchase_id') !== null) {
+                const orderId = JSON.parse(localStorage.getItem('purchase_id') || '')?.order_id;
+                const pid = JSON.parse(localStorage.getItem('purchase_id') || '')?.pid;
+                PurchaseApi.checkTransactionStatus(orderId)
+                    .then(async (res) => {
+                        if (res.data.message === 'Thành công.') {
+                            const response = await PurchaseApi.updateTransactionStatus(pid, 'COMPLETED');
+                            try {
+                                if (response) {
+                                    handleGetBills(JSON.parse(authKey as string).data.user.id);
+                                }
+                            } catch {
+                                console.log('Can not get bills');
+                            }
+                        }
+                        localStorage.removeItem('purchase_id');
+                    })
+                    .catch(() => {
+                        console.log('Can not update the bill');
+                        localStorage.removeItem('purchase_id');
+                    });
+            } else {
+                handleGetBills(JSON.parse(authKey as string).data.user.id);
+            }
+        }
     }, []);
     return (
         <div>
@@ -222,7 +271,14 @@ export default function Home() {
                                 style={{ width: '170px', height: '50px', border: '1px solid black', fontSize: '18px', fontWeight: '300' }}
                                 disabled={!confirm}
                                 onClick={() => {
-                                    handleMomoPurchase(selectedRows[0]?.numberOfPage * 500);
+                                    handleMomoPurchase(selectedRows[0].orderId, selectedRows[0]?.numberOfPage * 500),
+                                        localStorage.setItem(
+                                            'purchase_id',
+                                            JSON.stringify({
+                                                order_id: orderId,
+                                                pid: selectedRows[0].id
+                                            })
+                                        );
                                 }}
                             >
                                 Thanh toán
@@ -232,7 +288,7 @@ export default function Home() {
                 </div>
             </div>
 
-            <Modal open={modalOpen} onOk={handleOK} onCancel={handleCancel} footer={footerCustom}>
+            {/* <Modal open={modalOpen} onOk={handleOK} onCancel={handleCancel} footer={footerCustom}>
                 <div>
                     <h1 style={{ color: '#4663B7', display: 'flex', justifyContent: 'center', fontSize: '20px', marginTop: '20px', marginBottom: '20px' }}>XÁC NHẬN THANH TOÁN</h1>
 
@@ -257,7 +313,7 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-            </Modal>
+            </Modal> */}
         </div>
     );
 }

@@ -31,18 +31,16 @@ const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     ];
 
     return (
-        <IndexContextProvider>
-            <AuthWrapper>
-                <div style={{ display: 'flex', minHeight: '100vh', background: '#F9F9F9' }}>
-                    <Sidebar sidebar_content={sidebar_content} />
-                    <div style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-                        <Header />
-                        {children}
-                        <Footer />
-                    </div>
+        <AuthWrapper>
+            <div style={{ display: 'flex', minHeight: '100vh', background: '#F9F9F9' }}>
+                <Sidebar sidebar_content={sidebar_content} />
+                <div style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+                    <Header />
+                    {children}
+                    <Footer />
                 </div>
-            </AuthWrapper>
-        </IndexContextProvider>
+            </div>
+        </AuthWrapper>
     );
 };
 

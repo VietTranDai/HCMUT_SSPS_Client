@@ -5,6 +5,7 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS cho Toastify
 import AuthContextProvider from './context/AuthContext';
+import IndexContextProvider from './context/IndexContext';
 // Tải font tùy chỉnh
 const geistSans = localFont({
     src: './fonts/GeistVF.woff', // Đường dẫn tới font
@@ -36,7 +37,9 @@ export default function RootLayout({
                 {/* ToastContainer để hiển thị các thông báo Toastify */}
                 <ToastContainer />
                 <AuthContextProvider>
-                    <AntdRegistry>{children}</AntdRegistry>
+                    <IndexContextProvider>
+                        <AntdRegistry>{children}</AntdRegistry>
+                    </IndexContextProvider>
                 </AuthContextProvider>
                 {/* Ant Design Registry để render các component Ant Design */}
             </body>

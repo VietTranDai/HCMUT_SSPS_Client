@@ -12,6 +12,7 @@ import Cookies from 'js-cookie'; // Sử dụng thư viện js-cookie để lấ
 import { useAuthContext } from '../hooks/useAuthContext';
 import hcmut from '@/app/assets/hcmut.png';
 import './index.css';
+import { useIndexContext } from '../hooks/useIndexContext';
 
 const { Title } = Typography;
 
@@ -19,6 +20,7 @@ function LoginPage() {
     const [role, setRole] = useState<Role>(Role.CUSTOMER); // State for role
     const router = useRouter();
     const { auth, dispatch } = useAuthContext();
+    const { curIndex, setCurIndex } = useIndexContext();
     const login_button = [
         {
             title: 'Tài khoản HCMUT',
@@ -57,6 +59,7 @@ function LoginPage() {
 
                         if (user.role === Role.CUSTOMER) {
                             dispatch({ type: 'LOGIN', payload: user });
+                            setCurIndex({ type: 'INDEX', payload: 0 });
                             router.push('/customer/homepage');
                             return;
                         }

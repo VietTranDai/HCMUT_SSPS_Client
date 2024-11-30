@@ -17,7 +17,7 @@ export interface PurchaseBills {
     purchaseStatus: string;
 }
 
-export interface MomoPurchaseBill {
+export interface MomoPurchaseStatus {
     partnerCode: 'MOMO';
     orderId: string;
     requestId: string;
@@ -73,10 +73,37 @@ export const PurchaseApi = {
         }
     },
     // chọn phương thức thanh toán
-    purchaseBill: async (no_of_page: number): Promise<ApiResponse<MomoPurchaseResponse>> => {
+    purchaseBill: async (orderId: string, price: number): Promise<ApiResponse<MomoPurchaseResponse>> => {
         try {
             const response = await axios.post('http://localhost:5000/payment', {
-                totalCost: no_of_page
+                order_id: orderId,
+                totalCost: price
+            });
+            return {
+                data: response.data
+            };
+        } catch (err) {
+            throw err;
+        }
+    },
+    // Kiểm tra trạng thái thanh toán
+    checkTransactionStatus: async (orderId: string): Promise<ApiResponse<MomoPurchaseStatus>> => {
+        try {
+            const response = await axios.post('http://localhost:5000/transaction-status', {
+                orderId: orderId
+            });
+            return {
+                data: response.data
+            };
+        } catch (err) {
+            throw err;
+        }
+    },
+    updateTransactionStatus: async (purchase_id: string, purchase_status: string): Promise<ApiResponse<PurchaseBills>> => {
+        try {
+            const response = await axiosClient.patch('/customer/purchase/update-status', {
+                purchaseId: purchase_id,
+                purchaseStatus: purchase_status
             });
             return {
                 data: response.data
@@ -85,5 +112,4 @@ export const PurchaseApi = {
             throw err;
         }
     }
-    // Kiểm tra trạng thái thanh toán
 };

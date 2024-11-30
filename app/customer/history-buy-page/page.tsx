@@ -1,18 +1,16 @@
 'use client';
 
-import { Button, InputNumber, ThemeConfig } from 'antd';
-import { Table, DatePicker, Modal } from 'antd';
-import type { InputNumberProps, TableColumnsType, TableProps } from 'antd';
+import { Button, Tag, Table, DatePicker, Input, Space, Card, Pagination } from 'antd';
+import type { TableColumnsType } from 'antd';
 
 import './index.css';
-import { MouseEvent, useEffect, useState, useRef } from 'react';
-import { toast } from 'react-toastify';
-import { FilterConfirmProps, FilterDropdownProps } from 'antd/es/table/interface';
+import { useEffect, useState, useRef } from 'react';
+import { FilterDropdownProps } from 'antd/es/table/interface';
 import { SearchOutlined } from '@ant-design/icons';
 import type { InputRef, TableColumnType } from 'antd';
-import { Input, Space } from 'antd';
-import { Card, Pagination } from 'antd';
 import dayjs from 'dayjs';
+
+import { PurchaseApi, PurchaseBills } from '../services/purchase';
 
 interface DataType {
     key: number;
@@ -22,17 +20,9 @@ interface DataType {
     total: number;
 }
 
-type DataIndex = keyof DataType;
+type DataIndex = keyof PurchaseBills;
 
 export default function Home() {
-    const initialData: DataType = {
-        key: 0,
-        no_of_page: 0,
-        book_date: '',
-        pay_date: '',
-        total: 0
-    };
-
     // const [data, setData] = useState<DataType>(initialData);
     const default_cost = 500;
     const [datas, setDatas] = useState<DataType[]>([]);
@@ -45,6 +35,10 @@ export default function Home() {
     const searchInput = useRef<InputRef>(null);
     const [pageSize, setPageSize] = useState<number>(5);
     const [currentPage, setCurrentPage] = useState<number>(1);
+
+    // Purchase bill
+    const customer_id = '0e103ef5-3694-444e-820b-8aee4c695225';
+    const [purchases, setPurchases] = useState<PurchaseBills[]>([]);
 
     const handlePageSizeChange = (current: number, value: number) => {
         setPageSize(value);
@@ -66,10 +60,10 @@ export default function Home() {
         setSearchText('');
     };
 
-    const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<DataType> => ({
+    const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<PurchaseBills> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-                {dataIndex === 'book_date' || dataIndex === 'pay_date' ? (
+                {dataIndex === 'transactionTime' ? (
                     <DatePicker
                         style={{ marginBottom: 8, display: 'block' }}
                         value={selectedKeys[0]}
@@ -119,7 +113,7 @@ export default function Home() {
         ),
         filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }}></SearchOutlined>,
         onFilter: (value, record) => {
-            if (dataIndex === 'book_date' || dataIndex === 'pay_date') {
+            if (dataIndex === 'transactionTime') {
                 // Compare dates as strings or moments
                 const recordDate = record[dataIndex]; // Convert to YYYY-MM-DD
                 const dateObject = dayjs(value.toString());
@@ -132,93 +126,63 @@ export default function Home() {
                 .toLowerCase()
                 .includes((value as string).toLowerCase());
         }
-
-        // filterDropdownProps: {
-        //     onOpenChange(open) {
-        //         if (open) {
-        //             setTimeout(() => searchInput.current?.select(), 100);
-        //         }
-        //     }
-        // }
     });
 
-    const getDecimalPoint = (num: string) => {
-        return Number.parseFloat(num).toFixed(2);
-    };
-    const dataSource: DataType[] = [
-        {
-            key: 0,
-            no_of_page: 500,
-            book_date: '2024-10-24',
-            pay_date: '2024-10-24',
-            total: 500 * default_cost
-        },
-        {
-            key: 1,
-            no_of_page: 50,
-            book_date: '2024-10-24',
-            pay_date: '2024-10-24',
-            total: 50 * default_cost
-        },
-        {
-            key: 2,
-            no_of_page: 50,
-            book_date: '2024-10-24',
-            pay_date: '2024-10-26',
-            total: 50 * default_cost
-        },
-        {
-            key: 3,
-            no_of_page: 50,
-            book_date: '2024-10-24',
-            pay_date: '2024-10-26',
-            total: 50 * default_cost
-        }
-    ];
-    const columns: TableColumnsType<DataType> = [
+    const columns: TableColumnsType<PurchaseBills> = [
         {
             title: 'Số lượng trang mua',
-            dataIndex: 'no_of_page',
+            dataIndex: 'numberOfPage',
             width: 150,
-            ...getColumnSearchProps('no_of_page'),
+            ...getColumnSearchProps('numberOfPage'),
             defaultSortOrder: 'descend',
-            sorter: (a, b) => a.no_of_page - b.no_of_page
+            sorter: (a, b) => a.numberOfPage - b.numberOfPage
         },
         {
             title: 'Ngày đặt mua',
-            dataIndex: 'book_date',
+            dataIndex: 'transactionTime',
             width: 200,
-            ...getColumnSearchProps('book_date')
+            render: (value) => dayjs(value).format('YYYY-MM-DD'),
+            ...getColumnSearchProps('transactionTime')
         },
         {
-            title: 'Ngày thanh toán',
-            dataIndex: 'pay_date',
-            width: 150,
-            ...getColumnSearchProps('pay_date')
-            // ...getColumnSearchProps('print_date')
-            // sorter: (a, b) => a.print_date.getTime() - b.print_date.getTime(),
-            // render: (date) => date.toLocaleDateString() // Optional: Format date display
+            title: 'Trạng thái',
+            dataIndex: 'purchaseStatus',
+            width: 200,
+            render: (_, record) => (
+                <>
+                    <Tag color="green" key={record.id}>
+                        {record.purchaseStatus}
+                    </Tag>
+                </>
+            )
         },
         {
             title: 'Tổng số tiền (VND)',
-            dataIndex: 'total',
+            dataIndex: 'numberOfPage',
             width: 150,
             defaultSortOrder: 'descend',
-            sorter: (a, b) => a.total - b.total
+            sorter: (a, b) => (a.numberOfPage - b.numberOfPage) * 500,
+            render: (value) => value * 500
         }
     ];
 
     useEffect(() => {
-        setDatas(dataSource);
+        PurchaseApi.getAllBills(customer_id).then((res) => {
+            const dataWithKeys = res.data.map((item: PurchaseBills) => ({
+                ...item,
+                key: item.id
+            }));
+            setPurchases(dataWithKeys.filter((bill) => bill.purchaseStatus === 'COMPLETED'));
+        });
     }, []);
 
-    const currentData = datas.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    const currentData = purchases.slice((currentPage - 1) * pageSize, currentPage * pageSize);
     return (
         <div>
             <h1 style={{ color: '#7E7E7E', fontWeight: 'bolder', display: 'flex', justifyContent: 'center', fontSize: '28px', marginTop: '20px', marginBottom: '20px' }}>LỊCH SỬ IN</h1>
             <div style={{ paddingTop: '50px', marginBottom: '120px', paddingLeft: '50px', paddingRight: '50px' }}>
                 <Card title={'Danh sách lịch sử in'}>
-                    <Table<DataType> dataSource={currentData} columns={columns} pagination={false} style={{ boxShadow: '0px 4px 8px rgba(0,0,0,0.1)', borderRadius: '10px' }}></Table>
+                    <Table<PurchaseBills> dataSource={currentData} columns={columns} pagination={false} style={{ boxShadow: '0px 4px 8px rgba(0,0,0,0.1)', borderRadius: '10px' }}></Table>
                     <Pagination
                         current={currentPage}
                         pageSize={pageSize}
