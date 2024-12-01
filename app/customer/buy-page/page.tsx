@@ -1,8 +1,8 @@
 'use client';
 
-import { Button, InputNumber } from 'antd';
-import { Table, Card, Tag } from 'antd';
+import { Button, InputNumber, Table, Card, Tag, Tooltip, Modal, Space, Input } from 'antd';
 import type { InputNumberProps, TableColumnsType, TableProps } from 'antd';
+import { SearchOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 
 import './index.css';
 import { MouseEvent, useEffect, useState } from 'react';
@@ -71,8 +71,23 @@ export default function Home() {
     // Related to MOMO
     // const customer_id = '0e103ef5-3694-444e-820b-8aee4c695225';
     const [customerId, setCustomerId] = useState<string>('');
-    const [orderId, setOrderId] = useState<string>('');
+    const [purchaseModal, setPurchaseModal] = useState<boolean>(false);
+    const [purchase, setPurchase] = useState<PurchaseBills>(initialPurchaseBill);
 
+    // handle crud purchase
+    const handleDeletePurchase = async (id: string) => {
+        try {
+            const response = await PurchaseApi.deletePurchaseBill(id);
+            if (response) {
+                setPurchases(purchases.filter((p) => p.id !== id));
+                toast.success('Xóa đơn hàng thành công');
+            }
+        } catch (err) {
+            toast.error('Xóa đơn hàng thất bại');
+            throw err;
+        }
+    };
+    // handle select rows
     const onSelectChange = (newSelectedRowKeys: React.Key[], newSelectedRows: PurchaseBills[]) => {
         console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
@@ -98,7 +113,7 @@ export default function Home() {
         }
         try {
             const randomStr = Str_random();
-            setOrderId(`ORD${randomStr}`);
+            // setOrderId(`ORD${randomStr}`);
             const response = await PurchaseApi.createNewBill(customerId, noPage * 500, 'ORD' + `${randomStr}`, 'PENDING', noPage);
 
             if (response) {
@@ -128,7 +143,7 @@ export default function Home() {
                     ...item, // Spread the existing properties of `item`
                     key: item.id // Add or override the `key` property with a unique identifier
                 }));
-                setPurchases(datasWithKeys.filter((data) => data.purchaseStatus === 'PENDING') ?? []);
+                setPurchases(datasWithKeys.filter((data) => data.purchaseStatus === 'PENDING' || data.purchaseStatus === 'FAILED') ?? []);
             })
             .catch(() => {
                 console.log('Can not fetch the data');
@@ -181,7 +196,7 @@ export default function Home() {
             sorter: (a, b) => a.numberOfPage - b.numberOfPage
         },
         {
-            title: 'Ngày thanh toán',
+            title: 'Ngày đặt mua',
             width: 200,
             dataIndex: 'transactionTime',
             key: 'transactionTime',
@@ -194,9 +209,15 @@ export default function Home() {
             key: 'purchaseStatus',
             render: (_, record) => (
                 <>
-                    <Tag color="volcano" key={record.id}>
-                        {record.purchaseStatus}
-                    </Tag>
+                    {record.purchaseStatus === 'PENDING' ? (
+                        <Tag color="volcano" key={record.id}>
+                            {record.purchaseStatus}
+                        </Tag>
+                    ) : (
+                        <Tag color="red" key={record.id}>
+                            {record.purchaseStatus}
+                        </Tag>
+                    )}
                 </>
             )
         },
@@ -207,6 +228,28 @@ export default function Home() {
             key: 'price',
             sorter: (a, b) => a.price - b.price,
             render: (value) => 500 * value
+        },
+        {
+            title: 'Thao tác',
+            width: 150,
+            key: 'action',
+            render: (value) => (
+                <Space>
+                    <Tooltip title="Chi tiết">
+                        <Button
+                            color="primary"
+                            variant="outlined"
+                            icon={<EyeOutlined />}
+                            onClick={() => {
+                                setPurchaseModal(!purchaseModal), setPurchase(value);
+                            }}
+                        ></Button>
+                    </Tooltip>
+                    <Tooltip title="Xóa">
+                        <Button danger icon={<DeleteOutlined />} onClick={() => handleDeletePurchase(value.id)}></Button>
+                    </Tooltip>
+                </Space>
+            )
         }
     ];
 
@@ -289,6 +332,29 @@ export default function Home() {
                     </Card>
                 </div>
             </div>
+            <Modal open={purchaseModal} onOk={() => setPurchaseModal(false)} onCancel={() => setPurchaseModal(false)}>
+                <h1>Chi tiết đơn đặt mua trang in</h1>
+                <div className="field">
+                    <label htmlFor="order-id">Mã đơn</label>
+                    <Input id="order-id" disabled value={purchase.orderId}></Input>
+                </div>
+                <div className="field">
+                    <label htmlFor="no-page">Số lượng trang mua</label>
+                    <Input id="no-page" disabled value={purchase.numberOfPage}></Input>
+                </div>
+                <div className="field">
+                    <label htmlFor="buy-date">Ngày đặt mua</label>
+                    <Input id="buy-date" disabled value={dayjs(purchase.transactionTime).format('YYYY-MM-DD')}></Input>
+                </div>
+                <div className="field">
+                    <label htmlFor="status">Trạng thái</label>
+                    <Input id="status" disabled value={purchase.purchaseStatus} status="warning"></Input>
+                </div>
+                <div className="field">
+                    <label htmlFor="total-cost">Tổng số tiền</label>
+                    <Input id="total-cost" disabled value={purchase.numberOfPage * 500}></Input>
+                </div>
+            </Modal>
         </div>
     );
 }

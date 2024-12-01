@@ -274,7 +274,7 @@ export default function Home() {
                     <Pagination
                         current={currentPage}
                         pageSize={pageSize}
-                        total={datas.length}
+                        total={printers.length}
                         onChange={handlePageChange}
                         showSizeChanger
                         pageSizeOptions={['5', '10', '20', '30']}

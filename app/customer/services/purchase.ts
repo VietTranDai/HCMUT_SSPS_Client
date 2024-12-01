@@ -111,5 +111,19 @@ export const PurchaseApi = {
         } catch (err) {
             throw err;
         }
+    },
+    deletePurchaseBill: async (id: string): Promise<ApiResponse<PurchaseBills>> => {
+        try {
+            const response = await axiosClient.delete('/customer/purchase/delete-purchase', {
+                params: {
+                    purchaseId: id
+                }
+            });
+            return {
+                data: response.data
+            };
+        } catch (err) {
+            throw err;
+        }
     }
 };

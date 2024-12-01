@@ -50,6 +50,7 @@ function LoginPage() {
                     let user;
                     try {
                         user = JSON.parse(authKey).data.user; // Parse Auth_key để lấy thông tin user
+                        setCurIndex({ type: 'INDEX', payload: 0 });
                         // Điều hướng dựa trên role
 
                         if (user.role === Role.ADMIN) {
@@ -59,7 +60,6 @@ function LoginPage() {
 
                         if (user.role === Role.CUSTOMER) {
                             dispatch({ type: 'LOGIN', payload: user });
-                            setCurIndex({ type: 'INDEX', payload: 0 });
                             router.push('/customer/homepage');
                             return;
                         }
