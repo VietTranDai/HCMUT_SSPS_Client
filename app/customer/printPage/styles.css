@@ -150,3 +150,14 @@ td {
   font-size: 12px;
   margin-top: 5px;
 }
+
+.refresh-button {
+  background-color: #ffffff;
+  border: solid 2px #7E7E7E;
+  border-radius: 5px;
+  width: 130px;
+  height:60px;
+  margin-left: 3%;
+  font-size: 20px;
+  color:#7E7E7E;
+}
