@@ -16,8 +16,7 @@ const UploadedFilesList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const getIconForFile = (file: { name: string }) => {
-    if (file.name === undefined)
-      return undefined;
+    if (file.name === undefined) return undefined;
     const fileExtension = file.name.split(".").pop()?.toLowerCase();
     if (fileExtension === "pdf") {
       return PdfIcon;
@@ -27,23 +26,24 @@ const UploadedFilesList: React.FC = () => {
     return undefined;
   };
 
-  useEffect(() => {
-    // Replace with your API URL
-    const fetchFiles = async () => {
-      try {
-        const response = await fetch("https://673c001a96b8dcd5f3f82946.mockapi.io/api/a1/file"); // Thay URL API ở đây
-        if (!response.ok) {
-          throw new Error(`Failed to fetch files: ${response.statusText}`);
-        }
-        const data: FileItem[] = await response.json();
-        setFiles(data);
-      } catch (err: any) {
-        setError(err.message || "Unknown error");
-      } finally {
-        setIsLoading(false);
+  const fetchFiles = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("https://673c001a96b8dcd5f3f82946.mockapi.io/api/a1/file");
+      if (!response.ok) {
+        throw new Error(`Failed to fetch files: ${response.statusText}`);
       }
-    };
+      const data: FileItem[] = await response.json();
+      setFiles(data);
+    } catch (err: any) {
+      setError(err.message || "Unknown error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchFiles();
   }, []);
 
@@ -58,6 +58,9 @@ const UploadedFilesList: React.FC = () => {
   return (
     <div className="uploaded-files-list">
       <div className="Heading">Tệp đính kèm</div>
+      <button className="refresh-button" onClick={fetchFiles}>
+        Làm mới
+      </button>
       <table>
         <thead>
           <tr>
