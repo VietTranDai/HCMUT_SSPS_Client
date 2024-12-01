@@ -48,6 +48,7 @@ const FileUpload: React.FC = () => {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
+    // accept: '*/*',
     accept: {
       'application/pdf': ['.pdf'],
       'application/msword': ['.doc'],
@@ -106,6 +107,9 @@ const FileUpload: React.FC = () => {
         setFile(null);
         setUploadProgress(0);
         setErrorMessage('');
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 10000);
       } else {
         setErrorMessage('Có lỗi xảy ra khi tải lên.');
       }

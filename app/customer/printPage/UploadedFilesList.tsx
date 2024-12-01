@@ -100,9 +100,9 @@ const UploadedFilesList: React.FC = () => {
               <input type="checkbox" />
             </th>
             <th style={{ textAlign: "left" }}>Tên tập tin</th>
-            <th>Dung lượng</th>
+            <th>Loại file</th>
             <th>Khổ giấy</th>
-            <th>Ngày đăng tải</th>
+            {/* <th>Ngày đăng tải</th> */}
           </tr>
         </thead>
         <tbody>
@@ -119,9 +119,9 @@ const UploadedFilesList: React.FC = () => {
                 />
                 {file.fileName}
               </td>
-              <td>{}</td>
+              <td>{file.fileType}</td>
               <td>{file.pageSize}</td>
-              <td>{new Date(file.uploadDate).toLocaleDateString()}</td>
+              {/* <td>{new Date(file.uploadDate).toLocaleDateString()}</td> */}
             </tr>
           ))}
         </tbody>
