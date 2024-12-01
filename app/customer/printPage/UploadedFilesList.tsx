@@ -1,12 +1,21 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import PdfIcon from "./pdf.png";
 import WordIcon from "./doc.png";
+import Cookies from "js-cookie";
+import { AUTH_KEY } from "@/lib/services/auth.service";
 
 interface FileItem {
-  name: string;
-  dateModified: string;
-  size: string;
+  id: string;
+  fileName: string;
+  fileType: string;
+  totalCostPage: number;
+  printSideType: string;
+  pageSize: string;
+  pageToPrint: object;
+  numOfCop: number;
+  documentStatus: string;
   uploadDate: string;
 }
 
@@ -14,28 +23,51 @@ const UploadedFilesList: React.FC = () => {
   const [files, setFiles] = useState<FileItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [customerId, setCustomerId] = useState<string>("");
 
-  const getIconForFile = (file: { name: string }) => {
-    if (file.name === undefined) return undefined;
-    const fileExtension = file.name.split(".").pop()?.toLowerCase();
-    if (fileExtension === "pdf") {
-      return PdfIcon;
-    } else if (fileExtension === "docx" || fileExtension === "doc") {
-      return WordIcon;
-    }
+  const getIconForFile = (file: { fileName: string }) => {
+    if (!file.fileName) return undefined;
+    const fileExtension = file.fileName.split(".").pop()?.toLowerCase();
+    if (fileExtension === "pdf") return PdfIcon;
+    if (fileExtension === "docx" || fileExtension === "doc") return WordIcon;
     return undefined;
   };
+
+  const getCustomerId = () => {
+    const authKey = Cookies.get(AUTH_KEY);
+    if (authKey) {
+      const parsedAuth = JSON.parse(authKey);
+      return parsedAuth?.data?.user?.id || "";
+    }
+    return "";
+  };
+
+  useEffect(() => {
+    const id = getCustomerId();
+    setCustomerId(id);
+  }, []);
 
   const fetchFiles = async () => {
     setIsLoading(true);
     setError(null);
+
+    const customerId = getCustomerId();
+    if (!customerId) {
+      setError("Customer ID không hợp lệ.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch("https://673c001a96b8dcd5f3f82946.mockapi.io/api/a1/file");
+      const response = await fetch(`http://localhost:8080/customer/document/by-customer?customerId=${customerId}`);
       if (!response.ok) {
         throw new Error(`Failed to fetch files: ${response.statusText}`);
       }
-      const data: FileItem[] = await response.json();
-      setFiles(data);
+      const data = await response.json();
+      const sortedFiles = data.data?.sort((a: FileItem, b: FileItem) => {
+        return new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime();
+      }) || [];
+      setFiles(sortedFiles);
     } catch (err: any) {
       setError(err.message || "Unknown error");
     } finally {
@@ -68,9 +100,9 @@ const UploadedFilesList: React.FC = () => {
               <input type="checkbox" />
             </th>
             <th style={{ textAlign: "left" }}>Tên tập tin</th>
-            <th>Dung lượng</th>
-            <th>Ngày đăng tải</th>
-            <th>Ngày chỉnh sửa</th>
+            <th>Loại file</th>
+            <th>Khổ giấy</th>
+            {/* <th>Ngày đăng tải</th> */}
           </tr>
         </thead>
         <tbody>
@@ -85,11 +117,11 @@ const UploadedFilesList: React.FC = () => {
                   className="ico2"
                   alt="File Icon"
                 />
-                {file.name}
+                {file.fileName}
               </td>
-              <td>{file.size}</td>
-              <td>{file.uploadDate}</td>
-              <td>{file.dateModified}</td>
+              <td>{file.fileType}</td>
+              <td>{file.pageSize}</td>
+              {/* <td>{new Date(file.uploadDate).toLocaleDateString()}</td> */}
             </tr>
           ))}
         </tbody>
