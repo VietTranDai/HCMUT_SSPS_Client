@@ -6,10 +6,10 @@ import { useRouter } from 'next/navigation';
 
 const FirstPart = () => {
     const router = useRouter();
-    const { curIndex, dispatch } = useIndexContext();
+    const { curIndex, setCurIndex } = useIndexContext();
 
     const handleButton = (index: number) => {
-        dispatch({ type: 'INDEX', payload: index });
+        setCurIndex({ type: 'INDEX', payload: index });
         router.push('/customer/printPage');
     };
     return (
