@@ -61,12 +61,12 @@ Với sự phát triển của hệ thống Dịch vụ In thông minh cho Sinh 
 
 Thành viên phát triển dự án:
 
-- Trần Đại Việt - phát triển Backend
-- Lương Thanh Tùng - phát triển Backend
-- Trần Ngọc Châu Long - phát triển Frontend
-- Trần Trung Kiên - phát triển Frontend
-- Trần Quang Huy - phát triển Frontend
-- Lê Đăng Khoa - phát triển Backend
+-   Trần Đại Việt - phát triển Backend
+-   Lương Thanh Tùng - phát triển Backend
+-   Trần Ngọc Châu Long - phát triển Frontend
+-   Trần Trung Kiên - phát triển Frontend
+-   Trần Quang Huy - phát triển Frontend
+-   Lê Đăng Khoa - phát triển Backend
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -74,10 +74,10 @@ Thành viên phát triển dự án:
 
 <a id="built-with"></a>
 
-- **Next.js**: Framework React dùng cho phát triển ứng dụng web với tính năng SSR (Server Side Rendering) và SSG (Static Site Generation).
-- **Ant Design**: Thư viện UI component hiện đại và dễ sử dụng cho React.
-- **TypeScript**: Tăng cường tính an toàn khi viết code với kiểm tra kiểu tĩnh.
-- **Axios**: Thư viện gọi API cho việc giao tiếp giữa client và server.
+-   **Next.js**: Framework React dùng cho phát triển ứng dụng web với tính năng SSR (Server Side Rendering) và SSG (Static Site Generation).
+-   **Ant Design**: Thư viện UI component hiện đại và dễ sử dụng cho React.
+-   **TypeScript**: Tăng cường tính an toàn khi viết code với kiểm tra kiểu tĩnh.
+-   **Axios**: Thư viện gọi API cho việc giao tiếp giữa client và server.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -95,13 +95,13 @@ Trước khi sử dụng ứng dụng, bạn cần cài đặt các phần mềm
 
 **Node.js và npm**:
 
-- Tải xuống và cài đặt Node.js từ [Node.js Official Website](https://nodejs.org/). Quá trình cài đặt Node.js sẽ tự động cài đặt cả npm (Node Package Manager).
-- Kiểm tra cài đặt bằng các lệnh sau:
-  ```bash
-  node -v
-  npm -v
-  ```
-  Đảm bảo rằng phiên bản Node.js và npm đã được cài đặt.
+-   Tải xuống và cài đặt Node.js từ [Node.js Official Website](https://nodejs.org/). Quá trình cài đặt Node.js sẽ tự động cài đặt cả npm (Node Package Manager).
+-   Kiểm tra cài đặt bằng các lệnh sau:
+    ```bash
+    node -v
+    npm -v
+    ```
+    Đảm bảo rằng phiên bản Node.js và npm đã được cài đặt.
 
 ### Cài đặt
 
@@ -109,45 +109,45 @@ Bạn có thể sử dụng ứng dụng thông qua localhost bằng các bướ
 
 1. **Lấy mã nguồn từ GitHub**:
 
-   - Truy cập GitHub và tải source code của dự án về bằng cách clone repository:
-     ```bash
-     git clone <GitHub-Repository-URL>
-     ```
-   - Thay đổi thư mục làm việc thành thư mục dự án của bạn:
-     ```bash
-     cd <project-folder>
-     ```
+    - Truy cập GitHub và tải source code của dự án về bằng cách clone repository:
+        ```bash
+        git clone <GitHub-Repository-URL>
+        ```
+    - Thay đổi thư mục làm việc thành thư mục dự án của bạn:
+        ```bash
+        cd <project-folder>
+        ```
 
 2. **Cài đặt thư viện npm**:
 
-   - Tại thư mục gốc của dự án, chạy lệnh sau để cài đặt các thư viện cần thiết:
-     ```bash
-     npm install
-     ```
+    - Tại thư mục gốc của dự án, chạy lệnh sau để cài đặt các thư viện cần thiết:
+        ```bash
+        npm install
+        ```
 
 3. **Khởi động server NestJS**:
 
-- Tải src code bên server về để chạy
+-   Tải src code bên server về để chạy
 
-  - Chạy lệnh sau để khởi động server của dự án:
-    ```bash
-    npm run start:dev
-    ```
-  - Server sẽ khởi động ở chế độ phát triển và lắng nghe ở cổng mà bạn đã chỉ định (ví dụ: cổng `8080` như trong file `.env` của bạn).
+    -   Chạy lệnh sau để khởi động server của dự án:
+        ```bash
+        npm run start:dev
+        ```
+    -   Server sẽ khởi động ở chế độ phát triển và lắng nghe ở cổng mà bạn đã chỉ định (ví dụ: cổng `8080` như trong file `.env` của bạn).
 
 4. **Khởi động client NextJS**:
 
-- Chạy lệnh sau để khởi động client của dự án:
-  ```bash
-  npm run dev
-  ```
-- Server sẽ khởi động ở chế độ phát triển và lắng nghe ở cổng mà bạn đã chỉ định (ví dụ: cổng `3000` như trong file `.env` của bạn).
+-   Chạy lệnh sau để khởi động client của dự án:
+    ```bash
+    npm run dev
+    ```
+-   Server sẽ khởi động ở chế độ phát triển và lắng nghe ở cổng mà bạn đã chỉ định (ví dụ: cổng `3000` như trong file `.env` của bạn).
 
 ---
 
 ### Lưu ý:
 
-- Bạn cũng có thể cần kiểm tra phiên bản Node.js để đảm bảo tương thích với các thư viện mà dự án sử dụng.
+-   Bạn cũng có thể cần kiểm tra phiên bản Node.js để đảm bảo tương thích với các thư viện mà dự án sử dụng.
 
 <!-- USAGE -->
 
@@ -159,41 +159,87 @@ Dưới đây là một số lệnh cơ bản để tương tác với NextJS v�
 
 ### NextJS Commands
 
-- **Chạy ứng dụng NextJS:**
+-   **Chạy ứng dụng NextJS:**
 
-  ```bash
-    npm run dev
-  ```
+    ```bash
+      npm run dev
+    ```
 
-  Lệnh này sẽ khởi chạy ứng dụng NextJS. Bạn có thể truy cập ứng dụng qua đường dẫn [http://localhost:3000](http://localhost:8080).
+    Lệnh này sẽ khởi chạy ứng dụng NextJS. Bạn có thể truy cập ứng dụng qua đường dẫn [http://localhost:3000](http://localhost:8080).
 
-- **Tải những thư viện đã khai báo trong pakage:**
+-   **Tải những thư viện đã khai báo trong pakage:**
 
-  ```bash
-    npm install
-  ```
+    ```bash
+      npm install
+    ```
 
-- **Tải những thư viện mới :**
-  Chú ý phải tìm chính xác phiên bản của thư viện đó có thể lấy bản mới nhất.
-  Sau khi xác định được phiên bản của thư viên muốn tải, ví dụ bạn muốn tải thư viện **@types/react**, hãy lên trình duyệt tìm kiếm **npm @types/react** để xác định phiên bản mới nhất.
-  Dùng câu lệnh
+-   **Tải những thư viện mới :**
+    Chú ý phải tìm chính xác phiên bản của thư viện đó có thể lấy bản mới nhất.
+    Sau khi xác định được phiên bản của thư viên muốn tải, ví dụ bạn muốn tải thư viện **@types/react**, hãy lên trình duyệt tìm kiếm **npm @types/react** để xác định phiên bản mới nhất.
+    Dùng câu lệnh
 
-  ```bash
-    npm install --save-exact <Tên thư viện>@<phiên_bản>
-  ```
+    ```bash
+      npm install --save-exact <Tên thư viện>@<phiên_bản>
+    ```
 
-  Ví dụ:
+    Ví dụ:
 
-  ```bash
-    npm install --save-exact @types/react@18.3.11
-  ```
+    ```bash
+      npm install --save-exact @types/react@18.3.11
+    ```
+
+## Tài liệu Liên Quan
+
+Dưới đây là danh sách các tài liệu quan trọng liên quan đến dự án:
+
+#### 1. Mô Tả Và Phân Tích Các Yêu Cầu Của hệ thống
+
+-   Mô tả chi tiết về hệ thống HCMUT_SSPS, các tính năng, và mục tiêu của dịch vụ in thông minh dành cho sinh viên.
+-   Các yêu cầu chức năng và phi chức năng của hệ thống, bao gồm các tính năng cần có cho từng đối tượng sử dụng trong dự án.
+-   Xem tài liệu chi tiết tại đây: [project_description.pdf](docs/project_description.pdf)
+
+#### 2. Sơ Đồ Use-Case
+
+-   Sơ đồ use-case của hệ thống HCMUT_SSPS, mô tả các chức năng chính mà người dùng có thể tương tác.
+-   Xem tài liệu chi tiết tại đây: [use_case_diagram.pdf](docs/use_case_diagram.pdf)
+
+#### 3. Kiến Trúc Hệ Thống
+
+-   Mô tả kiến trúc của hệ thống HCMUT_SSPS, bao gồm các lớp và chiến lược triển khai giao diện người dùng, lưu trữ dữ liệu, và kết nối với các API bên ngoài.
+-   Xem tài liệu chi tiết tại đây: [system_architecture.pdf](docs/system_architecture.pdf)
+
+#### 4. System Modelling
+
+-   Mô tả quy trình kinh doanh giữa các hệ thống và người dùng trong một mô-đun cụ thể của hệ thống qua các Activity Diagram.
+-   Mô hình dãy thời gian mô tả tương tác giữa các đối tượng trong hệ thống, được sử dụng trong các tình huống cụ thể, được mô tả qua các Sequence Diagram.
+-   Component Diagram, mô tả các lớp đối tượng trong mô-đun, các thuộc tính và phương thức của chúng.
+-   Xem tài liệu chi tiết tại đây: [system_modelling.pdf](docs/system_modelling.pdf)
+
+#### 5. Giao Diện Người Dùng - MVP 1
+
+-   Giao diện người dùng mẫu cho phiên bản MVP 1, bao gồm các màn hình cơ bản của hệ thống in thông minh cho sinh viên.
+-   Xem tài liệu chi tiết tại đây: [mvp1_wireframe.pdf](docs/mvp1_wireframe.pdf)
+
+#### 6. Báo Cáo Kiểm Thử Usability
+
+-   Báo cáo kiểm thử tính khả dụng (usability test) của giao diện người dùng MVP 1, bao gồm các bước và kết quả thu thập từ người dùng thử nghiệm.
+-   Xem tài liệu chi tiết tại đây: [usability_test_report.pdf](docs/usability_test_report.pdf)
+
+#### 7. Hướng Dẫn Sử Dụng API
+
+-   Xem chi tiết về cách sử dụng API của hệ thống HCMUT_SSPS, bao gồm các endpoint và cách tương tác với hệ thống, bằng cách chạy server ở local sau đó vào đường dẫn [http://localhost:8080/api](http://localhost:8080/api) để xem Api document do Swagger tích hợp cung cấp.
+
+#### 8. Hướng Dẫn Cài Đặt Git, Github Và Áp Dụng GitFlow vào dự án
+
+-   Hướng dẫn chi tiết về cách thiết lập hệ thống kiểm soát phiên bản sử dụng Git và Github cho dự án.
+-   Xem tài liệu chi tiết tại đây: [git-flow.md](docs/git-flow//git-flow.md)
 
 ### Tham khảo thêm
 
 Để biết thêm chi tiết, bạn có thể tham khảo tài liệu chính thức của:
 
-- NextJS: https://nextjs.org/
-- Ant Design: https://ant.design/
+-   NextJS: https://nextjs.org/
+-   Ant Design: https://ant.design/
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 **Lưu ý**: Vì ứng dụng vẫn đang trong giai đoạn phát triển nên một số chức năng sẽ không được đầy đủ như mong muốn
