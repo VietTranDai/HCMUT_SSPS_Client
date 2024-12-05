@@ -9,6 +9,8 @@ const { Title } = Typography;
 
 const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
+        // <div>{children}</div>
+
         <Layout
             style={{
                 backgroundImage: 'url(/images/login/backkhoa.png)', // Đường dẫn tới ảnh nền

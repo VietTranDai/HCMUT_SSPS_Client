@@ -1,0 +1,27 @@
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td {
+    padding: 16px; /* Same padding for header and rows */
+    font-size: 17px;
+    text-align: left;
+    white-space: nowrap; /* Prevent content from wrapping */
+    box-sizing: border-box;
+    color: #7e7e7e;
+    font-weight: 600;
+    /* border: 1px solid red; */
+}
+
+/* Optional: Prevent resizing issues */
+.ant-table {
+    table-layout: fixed; /* Ensures columns maintain consistent width */
+    width: 100%;
+}
+
+/* Ensure consistent height for headers and rows */
+.ant-table-thead > tr > th {
+    height: 60px; /* Match row height */
+}
+
+.ant-table-tbody > tr > td {
+    height: 70px; /* Match header height */
+    /* border: 1px solid red; */
+}

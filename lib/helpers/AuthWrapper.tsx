@@ -22,7 +22,6 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
         let user;
         try {
             user = JSON.parse(authKey).data.user; // Parse Auth_key để lấy thông tin user
-
             // Điều hướng dựa trên role
             const pathname = window.location.pathname;
             if (pathname.startsWith('/admin') && user.role !== Role.ADMIN) {
