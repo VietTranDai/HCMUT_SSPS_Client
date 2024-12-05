@@ -12,6 +12,7 @@ import Cookies from 'js-cookie'; // Sử dụng thư viện js-cookie để lấ
 import { useAuthContext } from '../hooks/useAuthContext';
 import hcmut from '@/app/assets/hcmut.png';
 import './index.css';
+import { useIndexContext } from '../hooks/useIndexContext';
 
 const { Title } = Typography;
 
@@ -19,6 +20,7 @@ function LoginPage() {
     const [role, setRole] = useState<Role>(Role.CUSTOMER); // State for role
     const router = useRouter();
     const { auth, dispatch } = useAuthContext();
+    const { curIndex, setCurIndex } = useIndexContext();
     const login_button = [
         {
             title: 'Tài khoản HCMUT',
@@ -42,12 +44,13 @@ function LoginPage() {
                     const authKey = Cookies.get(AUTH_KEY);
                     // Nếu không có Auth_key, chuyển hướng đến trang login
                     if (!authKey) {
-                        router.push('/homepage');
+                        router.push('/login');
                         return;
                     }
                     let user;
                     try {
                         user = JSON.parse(authKey).data.user; // Parse Auth_key để lấy thông tin user
+                        setCurIndex({ type: 'INDEX', payload: 0 });
                         // Điều hướng dựa trên role
 
                         if (user.role === Role.ADMIN) {
@@ -57,17 +60,17 @@ function LoginPage() {
 
                         if (user.role === Role.CUSTOMER) {
                             dispatch({ type: 'LOGIN', payload: user });
-                            router.push('/homepage');
+                            router.push('/customer/homepage');
                             return;
                         }
 
                         if (user.role === Role.SPSO) {
-                            router.push('/spso');
+                            router.push('/spso/printers');
                             return;
                         }
                     } catch (error) {
                         console.error(error);
-                        router.push('/homepage');
+                        router.push('/login');
                         return;
                     }
                 } else {
@@ -87,21 +90,41 @@ function LoginPage() {
     };
 
     return (
-        <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center', marginTop: '25px' }}>
-            <div className="login-container">
-                {/* Todo: Make login page */}
-                <h1 style={{ marginTop: '40px' }}>SPSS Service</h1>
-                <img src={hcmut.src} style={{ height: '100px', marginTop: '10px', marginBottom: '18px' }}></img>
-                <div style={{ fontWeight: '800', fontSize: '18px' }}>Đăng nhập bằng tải khoản của bạn trên </div>
-                <div style={{ display: 'flex', flexDirection: 'column', marginTop: '30px', justifyContent: 'space-between', height: '120px' }}>
-                    {login_button.map((btn, index) => (
-                        <div key={index} className="login-btn" onClick={() => onLoginClick(btn.role)}>
-                            {index === 0 && <img src={hcmut.src} style={{ height: '25px', marginRight: '10px' }}></img>}
-                            {btn.title}
-                        </div>
-                    ))}
-                </div>
-            </div>
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh'
+            }}
+        >
+            <Card
+                style={{
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    padding: '100px',
+                    width: '600px'
+                }}
+            >
+                <img src="/images/login/01_logobachkhoatoi.png" alt="Logo" style={{ marginBottom: 20, width: '300px', height: 'auto' }} />
+                <Title level={3}>Đăng nhập dành cho</Title>
+                <Space direction="vertical" size="large">
+                    <Button
+                        type="primary"
+                        size="large"
+                        block
+                        onClick={() => onLoginClick(Role.CUSTOMER)} // Update role and login
+                    >
+                        Cán bộ/Sinh viên trường ĐH Bách Khoa TPHCM
+                    </Button>
+                    <Button block size="large" onClick={() => onLoginClick(Role.SPSO)}>
+                        Văn phòng quản lý SPSO
+                    </Button>
+                    <Button block size="large" onClick={() => onLoginClick(Role.ADMIN)}>
+                        Quản trị hệ thống Admin
+                    </Button>
+                </Space>
+            </Card>
         </div>
     );
 }

@@ -14,13 +14,14 @@ export default function MyComponent() {
 
         // Nếu Auth_key không tồn tại, có thể điều hướng về trang đăng nhập hoặc xử lý lỗi
         if (!authKey) {
-            router.push('/homepage');
+            router.push('/login');
             return;
         }
 
         try {
             // Giả sử authKey là một chuỗi JSON chứa thông tin role, ví dụ: { role: 'admin' }
-            const user = JSON.parse(authKey);
+
+            const user = JSON.parse(authKey as string).data.user;
             // Kiểm tra role của user và điều hướng
             console.log('User role: ', user.role);
             switch (user.role) {
@@ -28,7 +29,7 @@ export default function MyComponent() {
                     router.push('/admin');
                     break;
                 case Role.CUSTOMER:
-                    router.push('/homepage');
+                    router.push('/customer/homepage');
                     break;
                 default:
                     router.push('/spso');
@@ -37,7 +38,7 @@ export default function MyComponent() {
         } catch (error) {
             console.error('Lỗi parse JSON: ', error);
             // Điều hướng về login nếu lỗi parse xảy ra
-            router.push('/homepage');
+            router.push('/login');
         }
     }, []); // Chỉ chạy một lần khi component mount
 

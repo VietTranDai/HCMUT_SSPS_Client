@@ -8,6 +8,7 @@ interface Props {
 }
 
 const initialAuth: authType = {
+    id: '',
     avatar: '',
     email: '',
     familyName: '',
@@ -23,6 +24,7 @@ export const authReducer = (state: authType, action: authAction) => {
     switch (action.type) {
         case 'LOGIN':
             // console.log(action.payload);
+            localStorage.setItem('user', JSON.stringify(action.payload));
             return action.payload;
         default:
             return state;

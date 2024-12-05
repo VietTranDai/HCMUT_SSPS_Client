@@ -1,4 +1,5 @@
 export interface authType {
+    id: string;
     avatar: string;
     email: string;
     familyName: string;

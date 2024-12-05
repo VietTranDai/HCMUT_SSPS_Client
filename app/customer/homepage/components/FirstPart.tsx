@@ -10,7 +10,7 @@ const FirstPart = () => {
 
     const handleButton = (index: number) => {
         dispatch({ type: 'INDEX', payload: index });
-        router.push('/printPage');
+        router.push('/customer/printPage');
     };
     return (
         <div className="first-part">

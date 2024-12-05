@@ -25,3 +25,10 @@
     height: 70px; /* Match header height */
     /* border: 1px solid red; */
 }
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
