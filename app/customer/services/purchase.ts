@@ -75,7 +75,7 @@ export const PurchaseApi = {
     // chọn phương thức thanh toán
     purchaseBill: async (orderId: string, price: number): Promise<ApiResponse<MomoPurchaseResponse>> => {
         try {
-            const response = await axios.post('http://localhost:5000/payment', {
+            const response = await axios.post('http://localhost:8080/customer/momo/payment', {
                 order_id: orderId,
                 totalCost: price
             });
@@ -89,7 +89,7 @@ export const PurchaseApi = {
     // Kiểm tra trạng thái thanh toán
     checkTransactionStatus: async (orderId: string): Promise<ApiResponse<MomoPurchaseStatus>> => {
         try {
-            const response = await axios.post('http://localhost:5000/transaction-status', {
+            const response = await axios.post('http://localhost:8080/customer/momo/transaction-status', {
                 orderId: orderId
             });
             return {

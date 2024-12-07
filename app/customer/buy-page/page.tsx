@@ -290,18 +290,25 @@ export default function Home() {
     return (
         <div>
             <h1 style={{ color: '#7E7E7E', fontWeight: 'bolder', display: 'flex', justifyContent: 'center', fontSize: '28px', marginTop: '20px', marginBottom: '20px' }}>MUA TRANG IN</h1>
-            <div style={{ paddingLeft: '100px', paddingTop: '50px', marginBottom: '100px' }}>
-                <h1 style={{ fontWeight: '400' }}>Số lượng trang</h1>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '200px', marginTop: '30px', width: '1100px', borderRadius: '10px', backgroundColor: 'white', boxShadow: '0px 4px 8px rgba(0,0,0,0.1)' }}>
-                    <InputNumber placeholder="Số lượng trang (tối đa: 610 tờ)" style={{ width: '400px', height: '50px', display: 'flex', alignItems: 'center' }} onChange={ChangeNoPage}></InputNumber>
-                    <Button style={{ color: 'white', backgroundColor: '#4663B7', height: '50px', width: '150px', fontWeight: '500', marginLeft: '50px' }} onClick={handleInsert}>
-                        Đặt mua
-                    </Button>
-                </div>
+            <div style={{ paddingLeft: '100px', paddingTop: '50px', marginBottom: '100px', paddingRight: '100px' }}>
+                {/* <h1 style={{ fontWeight: '400' }}>Số lượng trang</h1> */}
+                <Card style={{ height: '200px' }} title="Số lượng trang">
+                    <div style={{ display: 'flex', alignItems: 'center', marginTop: '16px' }}>
+                        <div>
+                            <InputNumber placeholder="Tối đa: 610 tờ" style={{ width: '500px', height: '50px', display: 'flex', alignItems: 'center', textOverflow: 'ellipsis', overflow: 'hidden' }} onChange={ChangeNoPage}></InputNumber>
+                        </div>
+                        <div>
+                            <Button style={{ color: 'white', backgroundColor: '#4663B7', height: '50px', width: '150px', fontWeight: '500', marginLeft: '50px' }} onClick={handleInsert}>
+                                Đặt mua
+                            </Button>
+                        </div>
+                    </div>
+                </Card>
+                {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '200px', marginTop: '30px', width: '1100px', borderRadius: '10px', backgroundColor: 'white', boxShadow: '0px 4px 8px rgba(0,0,0,0.1)' }}></div> */}
 
                 <div style={{ marginTop: '100px' }}>
-                    <h1 style={{ fontWeight: '400' }}>Đơn thanh toán</h1>
-                    <Card style={{ width: '1100px', marginTop: '30px' }}>
+                    {/* <h1 style={{ fontWeight: '400' }}>Đơn thanh toán</h1> */}
+                    <Card style={{ width: '1100px', marginTop: '30px' }} title="Đơn thanh toán">
                         <Table<PurchaseBills>
                             dataSource={purchases}
                             key={'purchase-bill'}

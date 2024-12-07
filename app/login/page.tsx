@@ -41,8 +41,8 @@ function LoginPage() {
             try {
                 const { status } = await AuthService.loginWithCode(code, role); // Use role from state
                 if (status >= 200 && status < 300) {
-                    const authKey = Cookies.get(AUTH_KEY);
                     // Nếu không có Auth_key, chuyển hướng đến trang login
+                    const authKey = Cookies.get(AUTH_KEY);
                     if (!authKey) {
                         router.push('/login');
                         return;
