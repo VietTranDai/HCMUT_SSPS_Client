@@ -1,0 +1,93 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.page {
+    width: 80%;
+    justify-items: center;
+    margin: 50px auto;
+    padding: 20px;
+    padding-bottom: 5%;
+    gap: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 40px;
+    color: #444;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+}
+
+.report-item {
+    width: 500px;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: #f4f4f4;
+    transition: background-color 0.3s ease;
+}
+
+.report-item:hover {
+    background-color: #e9e9e9;
+}
+
+.pdf-icon {
+    width: 48px;
+    height: 48px;
+    margin-right: 15px;
+}
+
+.report-info {
+    flex: 1;
+    line-height: 1.2;
+}
+
+.report-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+}
+
+.report-title-file {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.report-title-file:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.report-month,
+.report-date {
+    margin: 5px 0 0;
+    font-size: 16px;
+    color: #555;
+}
