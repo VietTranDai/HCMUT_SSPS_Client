@@ -9,6 +9,8 @@ import { SearchOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import type { InputRef, TableColumnType } from 'antd';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
+import { AUTH_KEY } from '@/lib/services/auth.service'; // Import AUTH_KEY
+import Cookies from 'js-cookie';
 
 import { PurchaseApi, PurchaseBills } from '../services/purchase';
 
@@ -36,10 +38,11 @@ export default function Home() {
     const [currentPage, setCurrentPage] = useState<number>(1);
 
     // Purchase bill
-    const customer_id = '0e103ef5-3694-444e-820b-8aee4c695225';
+    const customer_id = '7fce9083-5b82-45bd-afea-e18d7b4a97b9';
     const [purchases, setPurchases] = useState<PurchaseBills[]>([]);
     const [purchaseModal, setPurchaseModal] = useState<boolean>(false);
     const [purchase, setPurchase] = useState<PurchaseBills>(initialPurchase);
+    const [customerId, setCustomerId] = useState<string>('');
 
     // handle crud purchase
     const handleDeletePurchase = async (id: string) => {
@@ -228,19 +231,34 @@ export default function Home() {
     ];
 
     useEffect(() => {
-        PurchaseApi.getAllBills(customer_id).then((res) => {
-            const dataWithKeys = res.data.map((item: PurchaseBills) => ({
-                ...item,
-                key: item.id
-            }));
-            setPurchases(dataWithKeys.filter((bill) => bill.purchaseStatus === 'COMPLETED'));
-        });
+        const authKey = Cookies.get(AUTH_KEY);
+
+        if (authKey) {
+            setCustomerId(JSON.parse(authKey as string).data.user.id);
+        }
+    }, []);
+    useEffect(() => {
+        const authKey = Cookies.get(AUTH_KEY);
+        if (authKey) {
+            setCustomerId(JSON.parse(authKey as string).data.user.id);
+            PurchaseApi.getAllBills(JSON.parse(authKey as string).data.user.id)
+                .then((res) => {
+                    const dataWithKeys = res.data.map((item: PurchaseBills) => ({
+                        ...item,
+                        key: item.id
+                    }));
+                    setPurchases(dataWithKeys.filter((bill) => bill.purchaseStatus === 'COMPLETED'));
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
     }, []);
 
     const currentData = purchases.slice((currentPage - 1) * pageSize, currentPage * pageSize);
     return (
         <div>
-            <h1 style={{ color: '#7E7E7E', fontWeight: 'bolder', display: 'flex', justifyContent: 'center', fontSize: '28px', marginTop: '20px', marginBottom: '20px' }}>LỊCH SỬ IN</h1>
+            <h1 style={{ color: '#7E7E7E', fontWeight: 'bolder', display: 'flex', justifyContent: 'center', fontSize: '28px', marginTop: '20px', marginBottom: '20px' }}>LỊCH SỬ GIAO DỊCH</h1>
             <div style={{ paddingTop: '50px', marginBottom: '120px', paddingLeft: '50px', paddingRight: '50px' }}>
                 <Card title={'Danh sách lịch sử in'}>
                     <Table<PurchaseBills> dataSource={currentData} columns={columns} pagination={false} rowSelection={rowSelection} style={{ boxShadow: '0px 4px 8px rgba(0,0,0,0.1)', borderRadius: '10px' }}></Table>

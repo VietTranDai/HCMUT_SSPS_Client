@@ -52,9 +52,9 @@ const Sidebar = ({ sidebar_content }: SidebarProps) => {
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <img src={hcmut.src} style={{ height: '90px' }}></img>
             </div>
-            <div style={{ height: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', marginTop: '50px' }}>
+            <div style={{ height: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
                 {sidebar_content.map((content, index) => (
-                    <div key={index} className={curIndex === index ? 'sidebar-content sidebar-content-extra' : 'sidebar-content'}>
+                    <div key={index} className={curIndex === index ? 'sidebar-content sidebar-content-extra' : 'sidebar-content'} style={{ marginTop: '15px', marginBottom: '15px' }}>
                         <Link
                             onClick={() => {
                                 setCurIndex({ type: 'INDEX', payload: index });
