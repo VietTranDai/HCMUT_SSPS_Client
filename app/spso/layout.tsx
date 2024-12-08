@@ -11,6 +11,10 @@ const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         {
             title: 'Danh sách máy in',
             link: '/spso/printers'
+        },
+        {
+            title: 'Danh sách báo cáo',
+            link: '/spso/reportlist'
         }
     ];
 

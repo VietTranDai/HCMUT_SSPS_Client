@@ -48,7 +48,11 @@ export interface MomoPurchaseResponse {
 export const PurchaseApi = {
     getAllBills: async (id: string): Promise<ApiResponse<PurchaseBills[]>> => {
         try {
-            const response = await axiosClient.get(`/customer/purchase/get-all-purchases?customerId=${id}`);
+            const response = await axiosClient.get(`/customer/purchase/get-all-purchases`, {
+                params: {
+                    customerId: id
+                }
+            });
             return {
                 data: response.data
             };

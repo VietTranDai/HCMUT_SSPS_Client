@@ -54,7 +54,14 @@ const App: React.FC = () => {
     };
 
     const handleFileUpload = (file: FileItem) => {
-        setFilesUploaded(() => [file, ...filesUploaded]);
+        const datasWithKeys = [...filesUploaded, file];
+        // setFilesUploaded(() => [file, ...filesUploaded]);
+        setFilesUploaded(
+            datasWithKeys.map((data) => ({
+                key: data.id,
+                ...data
+            }))
+        );
     };
 
     // useEffect(() => {
