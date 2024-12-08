@@ -9,21 +9,40 @@ import { Role } from '@/types/role';
 import { useState } from 'react';
 import { removeCookie } from '@/lib/helpers/cookieStorage';
 import Cookies from 'js-cookie'; // Sử dụng thư viện js-cookie để lấy cookies
+import { useAuthContext } from '../hooks/useAuthContext';
+import hcmut from '@/app/assets/hcmut.png';
+import './index.css';
+import { useIndexContext } from '../hooks/useIndexContext';
 
 const { Title } = Typography;
 
 function LoginPage() {
     const [role, setRole] = useState<Role>(Role.CUSTOMER); // State for role
     const router = useRouter();
-
+    const { auth, dispatch } = useAuthContext();
+    const { curIndex, setCurIndex } = useIndexContext();
+    const login_button = [
+        {
+            title: 'Tài khoản HCMUT',
+            role: Role.CUSTOMER
+        },
+        {
+            title: 'Quản trị viên',
+            role: Role.ADMIN
+        },
+        {
+            title: 'SPSO',
+            role: Role.SPSO
+        }
+    ];
     const handleLogin = useGoogleLogin({
         flow: 'auth-code',
         onSuccess: async ({ code }) => {
             try {
                 const { status } = await AuthService.loginWithCode(code, role); // Use role from state
                 if (status >= 200 && status < 300) {
-                    const authKey = Cookies.get(AUTH_KEY);
                     // Nếu không có Auth_key, chuyển hướng đến trang login
+                    const authKey = Cookies.get(AUTH_KEY);
                     if (!authKey) {
                         router.push('/login');
                         return;
@@ -31,6 +50,7 @@ function LoginPage() {
                     let user;
                     try {
                         user = JSON.parse(authKey).data.user; // Parse Auth_key để lấy thông tin user
+                        setCurIndex({ type: 'INDEX', payload: 0 });
                         // Điều hướng dựa trên role
 
                         if (user.role === Role.ADMIN) {
@@ -39,12 +59,13 @@ function LoginPage() {
                         }
 
                         if (user.role === Role.CUSTOMER) {
-                            router.push('/customer');
+                            dispatch({ type: 'LOGIN', payload: user });
+                            router.push('/customer/homepage');
                             return;
                         }
 
                         if (user.role === Role.SPSO) {
-                            router.push('/spso');
+                            router.push('/spso/printers');
                             return;
                         }
                     } catch (error) {
