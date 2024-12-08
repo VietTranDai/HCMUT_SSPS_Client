@@ -11,6 +11,15 @@ export enum printerStatus {
     ENABLE = 'ENABLE'
 }
 
+export interface LocationInfo {
+    id: string;
+    campusName: string;
+    buildingName: string;
+    roomName: string;
+    campusAdress: string;
+    hotline: string;
+    description: string;
+}
 export interface PrinterType {
     id: string;
     createdAt: string;
@@ -21,16 +30,9 @@ export interface PrinterType {
     printerStatus: printerStatus;
     isInProgress: boolean;
     locationId: string;
+    location: LocationInfo;
 }
-export interface LocationInfo {
-    id: string;
-    campusName: string;
-    buildingName: string;
-    roomName: string;
-    campusAdress: string;
-    hotline: string;
-    description: string;
-}
+
 export const PrinterApi = {
     getAllPrinters: async (): Promise<ApiResponse<PrinterType[]>> => {
         try {
